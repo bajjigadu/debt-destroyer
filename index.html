@@ -383,9 +383,13 @@ button:hover { background: var(--border); }
   </div>
 </div>
 <div class="hero-grid">
-  <div class="stat-card danger"><div class="stat-label">💀 Total Balance Owed</div><div class="stat-value" id="heroTotalDebt">$0</div><div class="stat-sub" id="heroMinPayment">Min monthly: $0</div></div>
+  <div class="stat-card danger">
+    <div class="stat-label">💀 Total Balance Owed</div>
+    <div class="stat-value" id="heroTotalDebt">$0</div>
+    <div class="stat-sub" id="heroMinPayment">Total minimums: $0 / month</div>
+  </div>
   <div class="stat-card success"><div class="stat-label">🏦 Bank Balance</div><div class="stat-value" id="heroBankDisplay">$0</div><div class="stat-sub">Available cash</div></div>
-  <div class="stat-card warning"><div class="stat-label">⏱️ Weeks Left</div><div class="stat-value" id="weeksRemaining">--</div><div class="stat-sub" id="targetDateLabel">Set your plan below</div></div>
+  <div class="stat-card warning"><div class="stat-label">⏱️ Weeks Left</div><div class="stat-value" id="weeksRemaining">--</div><div class="stat-sub" id="targetDateLabel">Set term & weekly</div></div>
   <div class="stat-card accent"><div class="stat-label">💰 Weekly Payment</div><div class="stat-value" id="heroWeeklyPayment">$0</div><div class="stat-sub">Suggested by term</div></div>
   <div class="stat-card purple"><div class="stat-label">💎 Total Saved</div><div class="stat-value" id="totalSavingsDisplay">$0</div><div class="stat-sub">Goal: $50/payday</div></div>
   <div class="stat-card blue"><div class="stat-label">📈 Monthly Surplus</div><div class="stat-value" id="heroSurplus">$0</div><div class="stat-sub">After expenses</div></div>
@@ -413,7 +417,7 @@ button:hover { background: var(--border); }
 </div>
 <div class="tab-panel active" id="tab-debts">
   <div id="debtFreeBanner" class="debt-free-banner"><h2>🏆 CONGRATULATIONS! YOU'RE DEBT FREE!</h2></div>
-  <div class="card"><div class="card-title">💳 Debt Breakdown <span class="badge badge-danger" id="debtCountBadge">0 debts</span></div><div style="overflow-x:auto;"><table class="debt-table"><thead><tr><th>Lender</th><th>Balance ($)</th><th>Interest %</th><th>Min Pay ($)</th><th>Quick Pay</th><th></th></tr></thead><tbody id="debtTableBody"></tbody></table></div><button class="btn-primary" id="addDebtRowBtn">+ Add Debt Row</button><div class="tip">💡 Change term above — minimum payments adjust to match your payoff goal.</div></div>
+  <div class="card"><div class="card-title">💳 Debt Breakdown <span class="badge badge-danger" id="debtCountBadge">0 debts</span></div><div style="overflow-x:auto;"><table class="debt-table"><thead><tr><th>Lender</th><th>Balance ($)</th><th>Interest %</th><th>Min Pay ($)</th><th>Quick Pay</th><th></th></tr></thead><tbody id="debtTableBody"></tbody></table></div><button class="btn-primary" id="addDebtRowBtn">+ Add Debt Row</button><div class="tip">💡 Minimum payments are automatically calculated based on your selected payoff term (e.g., 5 years = total debt ÷ 260 weeks). Change term above to adjust.</div></div>
   <div class="card"><div class="card-title">📉 Payoff Progress</div><div class="plan-bar-wrap"><div class="plan-bar" id="progressBar" style="width:0%"></div></div><div id="progressPercent" style="text-align:center; font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:800; color:var(--success); margin-top:6px;">0%</div></div>
 </div>
 <div class="tab-panel" id="tab-income"><div class="card"><div class="card-title">💰 Income</div><div class="fin-grid"><div class="fin-item"><label>Weekly Salary ($)</label><input type="number" id="weeklySalary" value="0" step="10"></div><div class="fin-item"><label>Additional Monthly ($)</label><input type="number" id="additionalIncome" value="0" step="50"></div></div><div class="fin-total"><span>Monthly Income Total</span><span class="val">$<span id="totalIncomeDisplay">0</span></span></div></div><div class="card"><div class="card-title">📉 Monthly Expenses</div><div class="fin-grid"><div class="fin-item"><label>Rent / Mortgage ($)</label><input type="number" id="rent" value="0"></div><div class="fin-item"><label>Car Loan ($)</label><input type="number" id="carLoan" value="0"></div><div class="fin-item"><label>Loan Payment ($)</label><input type="number" id="loanPayment" value="0"></div><div class="fin-item"><label>Coffee / Subscriptions ($)</label><input type="number" id="coffee" value="0"></div><div class="fin-item"><label>Zip / BNPL ($)</label><input type="number" id="zip" value="0"></div><div class="fin-item"><label>Other ($)</label><input type="number" id="other" value="0"></div><div class="fin-item"><label>Extra 1 ($)</label><input type="number" id="extra1" value="0"></div><div class="fin-item"><label>Extra 2 ($)</label><input type="number" id="extra2" value="0"></div></div><div class="fin-total"><span>Total Monthly Expenses</span><span class="val" style="color:var(--danger);">$<span id="totalExpensesDisplay">0</span></span></div><div class="fin-total" style="border-top:none;"><span>Monthly Surplus</span><span class="val">$<span id="surplusDisplay">0</span></span></div></div><div class="card"><div class="card-title">🏦 Bank Balance &amp; Savings</div><div class="bank-row"><label>Bank Balance ($):</label><input type="number" id="bankBalanceInput" value="0" step="50" style="width:120px;"><button class="btn-success" id="updateBankBtn">Update</button></div><div class="bank-row"><label>Savings Goal per Payday ($):</label><input type="number" id="savingsGoalInput" value="50" step="10" style="width:90px;"><button class="btn-purple" id="updateSavingsGoalBtn">Set Goal</button></div></div></div>
@@ -462,29 +466,33 @@ function saveAll() {
 function getDebtRows() { return Array.from(document.querySelectorAll('#debtTableBody tr[data-row]')).map(tr => ({ bank: tr.querySelector('.bank-select')?.value || 'Other', balance: parseFloat(tr.querySelector('.balance-input')?.value) || 0, rate: parseFloat(tr.querySelector('.rate-input')?.value) || 0, minPayment: parseFloat(tr.querySelector('.min-input')?.value) || 0 })); }
 function saveDebts() { localStorage.setItem('debtsData', JSON.stringify(getDebtRows())); }
 
-// SMART MINIMUM based on term: we need to pay off total debt in selectedTermYears weeks
-function calculateTermBasedMinPayment(balance, totalDebtSum, termYears) {
-  if (totalDebtSum === 0) return 0;
-  const weeksInTerm = termYears * 52;
-  // proportional minimum: each debt's share of total weekly payment needed
-  const totalWeeklyNeeded = totalDebtSum / weeksInTerm;
-  const share = (balance / totalDebtSum) * totalWeeklyNeeded;
+// NEW: Minimum payment based on term (weekly proportional amount)
+function calculateTermMinPayment(balance, totalDebtSum, termYears) {
+  if (totalDebtSum === 0 || balance === 0) return 0;
+  const totalWeeks = termYears * 52;
+  const weeklyNeeded = totalDebtSum / totalWeeks;
+  const share = (balance / totalDebtSum) * weeklyNeeded;
   return Math.max(10, Math.round(share));
 }
 
-function refreshMinimumsBasedOnTerm() {
+// Refresh all minimum payments according to current term and balances
+function refreshAllMinimums() {
   const rows = getDebtRows();
-  const totalBalance = rows.reduce((s,r)=>s+r.balance,0);
-  if (totalBalance === 0) return;
+  const totalBal = rows.reduce((s,r)=>s+r.balance,0);
+  if (totalBal === 0) return;
   rows.forEach(row => {
-    const newMin = calculateTermBasedMinPayment(row.balance, totalBalance, selectedTermYears);
-    row.minPayment = newMin;
+    if (row.balance > 0) {
+      row.minPayment = calculateTermMinPayment(row.balance, totalBal, selectedTermYears);
+    } else {
+      row.minPayment = 0;
+    }
   });
-  renderDebtTable(rows); // re-render with updated minimums
+  renderDebtTable(rows);
 }
 
 function calculateTotalDebt() {
-  let totalBalance = 0, totalMinPayments = 0;
+  let totalBalance = 0;
+  let totalMinPayments = 0;
   document.querySelectorAll('#debtTableBody tr[data-row]').forEach(tr => {
     let bal = parseFloat(tr.querySelector('.balance-input')?.value) || 0;
     let min = parseFloat(tr.querySelector('.min-input')?.value) || 0;
@@ -492,7 +500,7 @@ function calculateTotalDebt() {
     totalMinPayments += min;
   });
   document.getElementById('heroTotalDebt').textContent = money(totalBalance);
-  document.getElementById('heroMinPayment').textContent = 'Min monthly: ' + money(totalMinPayments);
+  document.getElementById('heroMinPayment').innerHTML = `Total minimums: ${money(totalMinPayments)} / month`;
   document.getElementById('debtCountBadge').textContent = getDebtRows().length + ' debts';
   document.getElementById('planTotalDebt').textContent = money(totalBalance);
   updateProgress(totalBalance);
@@ -556,12 +564,12 @@ function renderDebtTable(rows) {
     const refresh = () => {
       const info = bankDatabase[sel.value] || bankDatabase.Other;
       rateInp.value = info.interest;
-      // Recalculate all minimums based on current term and total balance
+      // Recalculate minimum payment based on current term and total debt
       const allRows = getDebtRows();
-      const total = allRows.reduce((s,r)=>s + (parseFloat(r.balance)||0),0);
-      if (total > 0) {
-        const newMin = calculateTermBasedMinPayment(parseFloat(balInp.value)||0, total, selectedTermYears);
-        minInp.value = newMin;
+      const currentTotal = allRows.reduce((s,r)=>s + (parseFloat(r.balance)||0), 0);
+      const thisBalance = parseFloat(balInp.value) || 0;
+      if (currentTotal > 0 && thisBalance > 0) {
+        minInp.value = calculateTermMinPayment(thisBalance, currentTotal, selectedTermYears);
       } else { minInp.value = 10; }
       calculateTotalDebt();
       saveDebts();
@@ -578,7 +586,7 @@ function renderDebtTable(rows) {
 }
 function addNewDebtRow() { const rows = getDebtRows(); rows.push({ bank:'Other', balance:0, rate:10, minPayment:10 }); renderDebtTable(rows); }
 function loadDebts() { const saved = localStorage.getItem('debtsData'); renderDebtTable(saved ? JSON.parse(saved) : []); }
-function resetDebtsToZero() { const rows = getDebtRows().map(r => ({ ...r, balance:0, minPayment:10 })); renderDebtTable(rows); alert('Debts reset.'); }
+function resetDebtsToZero() { const rows = getDebtRows().map(r => ({ ...r, balance:0, minPayment:0 })); renderDebtTable(rows); alert('All debts reset to $0.'); }
 function applyDebtPayment(amount) { 
   let rows = getDebtRows().filter(r=>r.balance>0).sort((a,b)=>b.rate-a.rate);
   let remaining = amount;
@@ -635,7 +643,7 @@ function init() {
     fixedWeeklyPayment = parseFloat(document.getElementById('fixedWeeklyPayment').value) || 0;
     planStartDate = new Date(document.getElementById('planStartDate').value);
     selectedTermYears = parseInt(document.getElementById('termSelector').value);
-    refreshMinimumsBasedOnTerm();  // 🔥 KEY: recalc minimums based on new term
+    refreshAllMinimums();  // 🔥 CRITICAL: recalc all minimum payments using the new term
     updateWeeklyPaymentDisplay();
     updateWeeksTracker();
     updateWeeksRemaining();
