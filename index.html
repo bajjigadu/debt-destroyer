@@ -3,261 +3,1313 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Debt Destroyer Pro v3 | Finance Engine</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+<title>Debt Destroyer Pro | Auto Payoff Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* ===== YOUR ORIGINAL CSS (UNCHANGED) ===== */
 :root {
-  --bg:#0d1117; --surface:#161b22; --surface2:#1c2333;
-  --border:#30363d; --accent:#f0883e; --accent2:#58a6ff;
-  --danger:#f85149; --success:#3fb950; --warning:#e3b341;
-  --purple:#bc8cff; --text:#e6edf3; --text2:#8b949e;
-  --radius:16px;
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2333;
+  --border: #30363d;
+  --accent: #f0883e;
+  --accent2: #58a6ff;
+  --danger: #f85149;
+  --success: #3fb950;
+  --warning: #e3b341;
+  --purple: #bc8cff;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #6e7681;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 24px;
+  --shadow: 0 10px 32px rgba(0,0,0,0.3);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);
 }
-body{margin:0;font-family:DM Sans;background:var(--bg);color:var(--text);}
-.app-shell{max-width:520px;margin:auto;}
-.app-header{display:flex;justify-content:space-between;padding:10px;background:var(--surface);}
-.hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px;}
-.stat-card{background:var(--surface);padding:10px;border-radius:12px;}
-.tab-bar{display:flex;overflow-x:auto;background:var(--surface);}
-.tab-btn{padding:10px;border:none;background:none;color:var(--text2);}
-.tab-btn.active{color:var(--accent);}
-.tab-panel{display:none;padding:10px;}
-.tab-panel.active{display:block;}
-.card{background:var(--surface);padding:10px;margin:10px;border-radius:12px;}
-.debt-table{width:100%;font-size:12px;}
-button{cursor:pointer;}
+.light {
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --surface2: #f6f8fa;
+  --border: #d0d7de;
+  --text: #1f2328;
+  --text2: #636c76;
+  --text3: #9198a1;
+  --shadow: 0 10px 32px rgba(0,0,0,0.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width: 100%; overflow-x: hidden; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Enhanced animations */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.app-shell {
+  width: 100%;
+  max-width: 520px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  position: relative;
+  animation: slideDown 0.5s ease-out;
+}
+
+.app-header {
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+}
+
+.app-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--accent), #ff6b35);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--accent), #ff6b35);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(240,136,62,0.3);
+}
+
+.header-actions { display: flex; gap: 8px; }
+
+.icon-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.icon-btn:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.icon-btn:active { transform: translateY(0); }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 12px;
+  animation: fadeIn 0.6s ease-out 0.1s both;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 10px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideUp 0.5s ease-out both;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.15s; }
+.stat-card:nth-child(3) { animation-delay: 0.2s; }
+.stat-card:nth-child(4) { animation-delay: 0.25s; }
+.stat-card:nth-child(5) { animation-delay: 0.3s; }
+.stat-card:nth-child(6) { animation-delay: 0.35s; }
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(240,136,62,0.15);
+}
+
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  transition: height 0.3s ease;
+}
+
+.stat-card:hover::before { height: 4px; }
+
+.stat-card.danger::before { background: var(--danger); }
+.stat-card.success::before { background: var(--success); }
+.stat-card.warning::before { background: var(--warning); }
+.stat-card.accent::before { background: var(--accent); }
+.stat-card.purple::before { background: var(--purple); }
+.stat-card.blue::before { background: var(--accent2); }
+
+.stat-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text3);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.stat-sub {
+  font-size: 0.6rem;
+  color: var(--text2);
+  margin-top: 4px;
+  transition: color 0.3s;
+}
+
+.stat-card:hover .stat-sub { color: var(--accent); }
+
+@media (max-width: 480px) {
+  .hero-grid { grid-template-columns: 1fr 1fr; }
+  .hero-grid .stat-card:last-child { grid-column: span 2; }
+}
+
+.quick-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 12px 12px;
+  animation: slideUp 0.5s ease-out 0.2s both;
+}
+
+.qbtn {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  padding: 11px 8px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.qbtn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: rgba(255,255,255,0.1);
+  transition: left 0.3s;
+}
+
+.qbtn:hover::before { left: 100%; }
+
+.qbtn:hover { border-color: var(--accent2); transform: translateY(-2px); }
+.qbtn:active { transform: translateY(0); }
+
+.qbtn.primary {
+  background: linear-gradient(135deg, var(--accent), #ff6b35);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(240,136,62,0.3);
+}
+
+.qbtn.primary:hover { box-shadow: 0 6px 16px rgba(240,136,62,0.4); }
+
+.qbtn.danger {
+  background: rgba(248,81,73,0.1);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.qbtn.danger:hover { background: var(--danger); color: white; }
+
+.setup-strip {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 12px;
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  justify-content: space-between;
+  animation: slideUp 0.5s ease-out 0.25s both;
+}
+
+.setup-strip label {
+  font-size: 0.72rem; font-weight: 700; color: var(--text2);
+  white-space: nowrap;
+}
+
+.input-group {
+  display: flex; align-items: center; gap: 6px;
+}
+
+.term-group {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface2); padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
+.tab-bar {
+  display: flex;
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 8px;
+  gap: 0;
+  position: sticky;
+  top: 53px;
+  z-index: 90;
+  width: 100%;
+}
+
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  padding: 10px 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text2);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+}
+
+.tab-btn:hover { color: var(--text); }
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+  animation: slideDown 0.3s ease-out;
+}
+
+.tab-panel {
+  display: none;
+  padding: 12px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.tab-panel.active { display: block; }
+
+input[type=number], input[type=date], input[type=text], input[type=password], select {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-family: 'Space Mono', monospace;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 100%;
+}
+
+input[type=number] { width: 90px; }
+input[type=date] { width: 130px; }
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(240,136,62,0.1);
+  transform: translateY(-2px);
+}
+
+.card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideUp 0.5s ease-out;
+}
+
+.card:hover { border-color: var(--accent2); box-shadow: 0 4px 12px rgba(88,166,255,0.1); }
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--accent);
+}
+
+.card-title .badge {
+  font-size: 0.65rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  animation: scaleIn 0.3s ease-out;
+}
+
+.badge-danger { background: rgba(248,81,73,0.15); color: var(--danger); }
+.badge-success { background: rgba(63,185,80,0.15); color: var(--success); }
+.badge-info { background: rgba(88,166,255,0.15); color: var(--accent2); }
+
+.debt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.76rem;
+  animation: slideUp 0.4s ease-out;
+}
+
+.debt-table th {
+  background: linear-gradient(90deg, var(--surface2), var(--surface));
+  color: var(--text2);
+  font-weight: 700;
+  padding: 10px 4px;
+  text-align: center;
+  border-bottom: 2px solid var(--border);
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+}
+
+.debt-table td {
+  padding: 8px 2px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.debt-table tr:hover {
+  background: var(--surface2);
+}
+
+.bank-select {
+  width: 95px; padding: 6px; font-size: 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.balance-input, .rate-input, .min-input {
+  width: 70px; font-size: 0.7rem; padding: 6px;
+  border-radius: 6px;
+}
+
+.tracker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+  gap: 8px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.tracker-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tracker-grid::-webkit-scrollbar-track {
+  background: var(--surface2);
+  border-radius: 3px;
+}
+
+.tracker-grid::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.tracker-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--accent2);
+}
+
+.week-chip {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 4px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.65rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.week-chip::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: rgba(240,136,62,0.1);
+  transition: left 0.4s;
+}
+
+.week-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(240,136,62,0.15);
+}
+
+.week-chip:hover::before { left: 100%; }
+
+.week-chip.paid {
+  background: rgba(63,185,80,0.2);
+  border-color: var(--success);
+}
+
+.week-chip .wk { font-weight: 800; display: block; }
+.week-chip .amt { font-weight: 800; color: var(--accent); margin-top: 3px; display: block; }
+
+.plan-step {
+  display: flex; gap: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  transition: all 0.3s;
+  animation: slideUp 0.4s ease-out;
+}
+
+.plan-step:hover {
+  border-left-color: var(--accent2);
+  box-shadow: 0 4px 12px rgba(88,166,255,0.1);
+  transform: translateX(4px);
+}
+
+.step-num {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent), #ff6b35);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  color: white;
+  box-shadow: 0 4px 12px rgba(240,136,62,0.3);
+  font-family: 'Space Mono', monospace;
+}
+
+.step-body h4 {
+  font-size: 0.82rem;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.step-body p {
+  font-size: 0.7rem;
+  color: var(--text2);
+  line-height: 1.4;
+}
+
+.highlight { color: var(--accent); font-weight: 800; }
+.warn { color: var(--warning); font-weight: 700; }
+.good { color: var(--success); font-weight: 700; }
+
+.plan-bar-wrap {
+  background: var(--surface2);
+  border-radius: 20px;
+  height: 12px;
+  margin: 10px 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.plan-bar {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(240,136,62,0.4);
+}
+
+.plan-summary {
+  background: linear-gradient(135deg, rgba(240,136,62,0.12), rgba(88,166,255,0.08));
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(240,136,62,0.2);
+  animation: slideUp 0.5s ease-out;
+}
+
+.plan-summary h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.plan-summary > p {
+  font-size: 0.7rem;
+  color: var(--text2);
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.plan-stat {
+  background: var(--surface);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.plan-stat strong {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.plan-stat { font-size: 0.65rem; color: var(--text2); }
+
+button {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+button:active { transform: translateY(0); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #ff6b35);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(240,136,62,0.2);
+}
+
+.btn-primary:hover { box-shadow: 0 6px 16px rgba(240,136,62,0.3); }
+
+.btn-success {
+  background: linear-gradient(135deg, var(--success), #2da863);
+  color: white;
+  border-color: var(--success);
+}
+
+.btn-danger {
+  background: rgba(248,81,73,0.1);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.btn-danger:hover {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-purple {
+  background: linear-gradient(135deg, var(--purple), #a66bff);
+  color: white;
+  border-color: var(--purple);
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 0.65rem;
+}
+
+.tip {
+  background: linear-gradient(135deg, rgba(88,166,255,0.12), rgba(88,166,255,0.05));
+  border-left: 4px solid var(--accent2);
+  padding: 10px 12px;
+  font-size: 0.7rem;
+  margin: 10px 0;
+  border-radius: 6px;
+  line-height: 1.5;
+}
+
+.tip strong { color: var(--accent2); }
+
+.debt-free-banner {
+  background: linear-gradient(135deg, rgba(63,185,80,0.2), rgba(63,185,80,0.08));
+  border: 2px solid var(--success);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 16px;
+  display: none;
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.debt-free-banner.visible { display: block; }
+
+.debt-free-banner h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  color: var(--success);
+  text-shadow: 0 0 12px rgba(63,185,80,0.3);
+}
+
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-box {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  width: 280px;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-box h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.modal-box input {
+  font-size: 1.4rem;
+  letter-spacing: 8px;
+  width: 140px;
+  text-align: center;
+  margin: 12px 0;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.modal-actions button {
+  flex: 1;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem;
+}
+
+.fin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.fin-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fin-item label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.fin-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: var(--surface2);
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+}
+
+.fin-total .val {
+  color: var(--accent);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.88rem;
+}
+
+.bank-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.bank-row label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  flex: 1;
+  min-width: 120px;
+}
+
+.bank-row input {
+  flex: 1;
+}
+
+/* Tooltip */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  white-space: nowrap;
+  z-index: 1001;
+  animation: slideUp 0.2s ease-out;
+}
+
+/* Loading state */
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .modal-box { width: 90%; max-width: 260px; }
+  .plan-grid { grid-template-columns: 1fr; }
+}
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
 </style>
 </head>
-
 <body>
 <div class="app-shell">
-
-<!-- HEADER -->
 <div class="app-header">
-  <div>💸 Debt Destroyer v3</div>
-  <button id="modeBtn">Switch Mode</button>
+  <div class="app-logo"><div class="logo-icon">💸</div>DEBT DESTROYER</div>
+  <div class="header-actions">
+    <button class="icon-btn" id="darkToggleBtn" data-tooltip="Switch theme">☀️ Light</button>
+    <button class="icon-btn" onclick="window.print()" data-tooltip="Print plan">🖨️ Print</button>
+  </div>
 </div>
 
-<!-- HERO -->
 <div class="hero-grid">
-  <div class="stat-card">Debt<br><b id="heroDebt">$0</b></div>
-  <div class="stat-card">Bank<br><b id="heroBank">$0</b></div>
-  <div class="stat-card">Weekly<br><b id="heroWeekly">$0</b></div>
+  <div class="stat-card danger" data-tooltip="Total outstanding debt"><div class="stat-label">💀 TOTAL DEBT</div><div class="stat-value" id="heroTotalDebt">$0</div></div>
+  <div class="stat-card success" data-tooltip="Available funds"><div class="stat-label">🏦 BANK BALANCE</div><div class="stat-value" id="heroBankDisplay">$0</div><div class="stat-sub">Available cash</div></div>
+  <div class="stat-card blue" data-tooltip="Income minus expenses"><div class="stat-label">📈 MONTHLY SURPLUS</div><div class="stat-value" id="heroSurplus">$0</div><div class="stat-sub">After expenses</div></div>
+  <div class="stat-card warning" data-tooltip="Weeks until debt free"><div class="stat-label">⏱️ WEEKS LEFT</div><div class="stat-value" id="weeksRemaining">--</div><div class="stat-sub" id="targetDateLabel">Select term</div></div>
+  <div class="stat-card accent" data-tooltip="Auto-calculated payment"><div class="stat-label">💰 AUTO WEEKLY PAYMENT</div><div class="stat-value" id="heroWeeklyPayment">$0</div><div class="stat-sub">Required to meet term</div></div>
+  <div class="stat-card purple" data-tooltip="Total paid so far"><div class="stat-label">💎 TOTAL SAVED</div><div class="stat-value" id="totalSavingsDisplay">$0</div><div class="stat-sub">Goal: $50/payday</div></div>
 </div>
 
-<!-- QUICK ACTIONS -->
-<div class="card">
-  <button id="addDebtRowBtn">+ Add Debt</button>
-  <button id="quickAddPaymentBtn">Pay $50</button>
-  <button id="manualSalaryBtn">Payday</button>
-  <button id="undoBtn">Undo</button>
+<div class="quick-row">
+  <button class="qbtn primary" id="quickAddPaymentBtn" data-tooltip="Add $50 payment">➕ Extra Payment</button>
+  <button class="qbtn" id="manualSalaryBtn" data-tooltip="Add payday amount">💼 Force Payday</button>
+  <button class="qbtn" id="resetDebtBtn" data-tooltip="Clear all debts">⟳ Reset Debts</button>
+  <button class="qbtn danger" id="resetFullBtn" data-tooltip="Full reset">🗑️ Factory Reset</button>
 </div>
 
-<!-- TABS -->
+<div class="setup-strip">
+  <div class="input-group"><label>📅 Start:</label><input type="date" id="planStartDate" value="2026-05-27" data-tooltip="Plan start date"></div>
+  <div class="term-group">
+    <label>📆 Term:</label>
+    <select id="termSelector" data-tooltip="Payment term">
+      <option value="1">1 Yr</option><option value="2">2 Yr</option><option value="3">3 Yr</option>
+      <option value="4">4 Yr</option><option value="5" selected>5 Yr</option>
+      <option value="6">6 Yr</option><option value="7">7 Yr</option>
+    </select>
+  </div>
+  <button class="btn-primary" id="updateTermBtn" data-tooltip="Apply changes">Apply</button>
+</div>
+
 <div class="tab-bar">
-  <button class="tab-btn active" data-tab="debts">Debts</button>
-  <button class="tab-btn" data-tab="income">Income</button>
-  <button class="tab-btn" data-tab="tracker">Tracker</button>
-  <button class="tab-btn" data-tab="plan">Plan</button>
-  <button class="tab-btn" data-tab="settings">Settings</button>
+  <button class="tab-btn active" data-tab="tab-debts">💳 Debts</button>
+  <button class="tab-btn" data-tab="tab-income">📊 Income</button>
+  <button class="tab-btn" data-tab="tab-tracker">✅ Tracker</button>
+  <button class="tab-btn" data-tab="tab-plan">🚀 Plan</button>
+  <button class="tab-btn" data-tab="tab-settings">⚙️ Settings</button>
 </div>
 
-<!-- DEBTS -->
-<div class="tab-panel active" id="debts">
+<div class="tab-panel active" id="tab-debts">
+  <div id="debtFreeBanner" class="debt-free-banner"><h2>🎉 DEBT FREE! 🎉</h2><p style="color: var(--success); font-size: 0.75rem; margin-top: 6px;">You've achieved your goal!</p></div>
   <div class="card">
-    <table class="debt-table">
-      <tbody id="debtTableBody"></tbody>
-    </table>
+    <div class="card-title">💳 Debt Breakdown <span class="badge badge-danger" id="debtCountBadge">0</span></div>
+    <div style="overflow-x:auto;">
+      <table class="debt-table">
+        <thead><tr><th>Lender</th><th>Balance ($)</th><th>Interest %</th><th>Min Monthly ($)</th><th>Quick Pay</th><th></th></tr></thead>
+        <tbody id="debtTableBody"></tbody>
+      </table>
+    </div>
+    <button class="btn-primary" id="addDebtRowBtn">+ Add Debt</button>
+    <div class="info-row" style="margin-top: 12px;">
+      <span>📊 Sum of Minimum Monthly Payments:</span>
+      <strong id="sumMinWeeklyDisplay" style="color: var(--accent); font-size: 0.9rem;">$0</strong>
+    </div>
+    <div class="tip">✅ <strong>Auto-calculated:</strong> Monthly minimum = Interest charged + 1% of balance (AU standard). Minimum floor of $10/month. Change interest rate or balance above and minimum updates automatically.</div>
+  </div>
+  <div class="card"><div class="card-title">📉 Payoff Progress</div><div class="plan-bar-wrap"><div class="plan-bar" id="progressBar" style="width:0%"></div></div><div id="progressPercent" style="text-align:center; font-weight:800; margin-top:8px; font-size: 0.9rem;">0%</div></div>
+</div>
+
+<div class="tab-panel" id="tab-income">
+  <div class="card"><div class="card-title">💰 Income</div><div class="fin-grid"><div class="fin-item"><label>Weekly Salary ($)</label><input type="number" id="weeklySalary" value="0"></div><div class="fin-item"><label>Additional Monthly ($)</label><input type="number" id="additionalIncome" value="0"></div></div><div class="fin-total"><span>Monthly Income</span><span class="val">$<span id="totalIncomeDisplay">0</span></span></div></div>
+  <div class="card"><div class="card-title">📉 Monthly Expenses</div><div class="fin-grid"><div class="fin-item"><label>Rent/Mortgage</label><input type="number" id="rent" value="0"></div><div class="fin-item"><label>Car Loan</label><input type="number" id="carLoan" value="0"></div><div class="fin-item"><label>Loan Payment</label><input type="number" id="loanPayment" value="0"></div><div class="fin-item"><label>Coffee/Subs</label><input type="number" id="coffee" value="0"></div><div class="fin-item"><label>Zip/BNPL</label><input type="number" id="zip" value="0"></div><div class="fin-item"><label>Other</label><input type="number" id="other" value="0"></div><div class="fin-item"><label>Extra 1</label><input type="number" id="extra1" value="0"></div><div class="fin-item"><label>Extra 2</label><input type="number" id="extra2" value="0"></div></div><div class="fin-total"><span>Monthly Expenses</span><span class="val">$<span id="totalExpensesDisplay">0</span></span></div><div class="fin-total"><span>Monthly Surplus</span><span class="val">$<span id="surplusDisplay">0</span></span></div></div>
+  <div class="card"><div class="card-title">🏦 Bank & Savings</div><div class="bank-row"><label>Bank Balance:</label><input type="number" id="bankBalanceInput" value="0"><button class="btn-success" id="updateBankBtn">Update</button></div><div class="bank-row"><label>Savings Goal/Payday:</label><input type="number" id="savingsGoalInput" value="50"><button class="btn-purple" id="updateSavingsGoalBtn">Set</button></div></div>
+</div>
+
+<div class="tab-panel" id="tab-tracker"><div class="card"><div class="card-title">✅ Weekly Tracker <span class="badge badge-success" id="weeksPaidBadge">0 paid</span></div><div id="weeklyTracker" class="tracker-grid"></div><div style="font-size:0.68rem; text-align:center; margin-top:10px; padding-top: 8px; border-top: 1px solid var(--border);">Start: <strong id="startDatePreview">—</strong> | Auto payment: <strong id="autoPaymentPreview">$0</strong>/week to pay off term</div></div></div>
+
+<div class="tab-panel" id="tab-plan">
+  <div class="plan-summary">
+    <h3>🚀 Automated Payoff Plan</h3>
+    <p>Weekly payment is automatically calculated from your selected term</p>
+    <div class="plan-grid">
+      <div class="plan-stat"><strong id="planTotalDebt">$0</strong>Total Debt</div>
+      <div class="plan-stat"><strong id="planRequiredWeekly">$0</strong>Auto Weekly Payment</div>
+      <div class="plan-stat"><strong id="planTargetDate">—</strong>Target Debt Free</div>
+    </div>
+  </div>
+  <div id="planStepsContainer"></div>
+  <div class="card">
+    <div class="card-title">⚡ Avalanche Strategy</div>
+    <div id="strategyComparison" class="tip"></div>
   </div>
 </div>
 
-<!-- INCOME -->
-<div class="tab-panel" id="income">
+<div class="tab-panel" id="tab-settings">
   <div class="card">
-    <input id="salary" placeholder="Weekly Salary">
-    <input id="expenses" placeholder="Monthly Expenses">
-    <div>Surplus: <span id="surplus">0</span></div>
+    <div class="card-title">⚙️ Settings</div>
+    <div class="bank-row">
+      <label>New Passcode:</label>
+      <input type="password" id="newPasscodeInput" maxlength="4" style="width:80px;">
+      <button class="btn-primary" id="changePasscodeBtn">Update</button>
+    </div>
+    <button class="btn-danger" id="resetDebtBtnSettings" style="width: 100%; margin-top: 8px;">Reset Debts</button>
+    <button class="btn-danger" id="resetFullBtnSettings" style="width: 100%; margin-top: 8px;">Factory Reset</button>
+  </div>
+  <div class="tip">🔐 Default passcode: <strong>1234</strong> | 📱 Data saved locally | 🔒 Your data never leaves your device</div>
+</div>
+
+<div id="passcodeModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <h3>🔒 Passcode Required</h3>
+    <input type="password" id="passcodeInput" maxlength="4" placeholder="••••" autofocus>
+    <div class="modal-actions">
+      <button class="btn-primary" id="passcodeConfirmBtn">Confirm</button>
+      <button id="passcodeCancelBtn">Cancel</button>
+    </div>
   </div>
 </div>
-
-<!-- TRACKER -->
-<div class="tab-panel" id="tracker">
-  <div class="card">Weekly tracker (simplified v3)</div>
-</div>
-
-<!-- PLAN -->
-<div class="tab-panel" id="plan">
-  <div class="card">
-    <b>Strategy:</b> <span id="strategy">Avalanche</span>
-  </div>
-</div>
-
-<!-- SETTINGS -->
-<div class="tab-panel" id="settings">
-  <div class="card">
-    <button id="resetBtn">Reset All</button>
-  </div>
-</div>
-
-</div>
-
-<!-- TOAST -->
-<div id="toast" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-background:#222;padding:8px 12px;border-radius:10px;display:none;color:#fff;"></div>
 
 <script>
-/* =========================
-   PRO FINANCE APP v3 ENGINE
-   ========================= */
-
-const BANKS = {
-  "CommBank":18.2,"NAB":16.5,"Westpac":15.9,"ANZ":17.8,
-  "Afterpay":0,"Zip Pay":0,"Other":18
+// Australian bank rates database with min payment rules
+// AU standard: Min payment = max(Interest charged + 1% of balance, $10)
+const bankDatabase = {
+  "CommBank": 18.2, "NAB": 16.5, "Westpac": 15.99, "ANZ": 17.8,
+  "Latitude": 21.5, "Afterpay": 0, "Zip Pay": 0, "HSBC": 14.9,
+  "Coles Credit": 19.99, "Kogan Card": 22.9, "Flexi Loan": 17.5,
+  "Other Credit Card": 18.0, "Personal Loan": 12.5
 };
+const bankList = Object.keys(bankDatabase);
 
-const money = n => "$" + Math.round(n||0).toLocaleString();
+// AU Standard minimum payment calculation (returns MONTHLY amount)
+function calculateAUMinPayment(balance, interestRate) {
+  if (balance <= 0) return 0;
+  // AU regulation: Min payment = Interest charged + 1% of balance, minimum $10/month
+  // Calculate MONTHLY minimum payment
+  const monthlyRate = interestRate / 100 / 12;
+  const monthlyInterest = balance * monthlyRate;
+  const monthlyPrincipal = balance * 0.01; // 1% of balance
+  const monthlyMin = Math.max(monthlyInterest + monthlyPrincipal, 10);
+  
+  return Math.ceil(monthlyMin);
+}
+const money = n => '$' + (Math.round(n || 0)).toLocaleString();
 
-let S = {
-  bank:+localStorage.getItem("bank")||0,
-  debts:JSON.parse(localStorage.getItem("debts")||"[]"),
-  saved:+localStorage.getItem("saved")||0,
-  mode:localStorage.getItem("mode")||"avalanche",
-  history:JSON.parse(localStorage.getItem("history")||"[]")
-};
+let RESET_PASSCODE = localStorage.getItem('appPasscode') || '1234';
+let currentBankBalance = parseFloat(localStorage.getItem('bankBalance') || '0');
+let totalSaved = parseFloat(localStorage.getItem('totalSaved') || '0');
+let savingsGoal = parseFloat(localStorage.getItem('savingsGoal') || '50');
+let planStartDate = new Date(localStorage.getItem('planStartDate') || '2026-05-27');
+let emergencyLog = JSON.parse(localStorage.getItem('emergencyLog') || '[]');
+let debtOriginal = parseFloat(localStorage.getItem('originalDebt') || '0');
+let isLight = localStorage.getItem('isLightMode') === 'true';
+let selectedTermYears = parseInt(localStorage.getItem('termYears') || '5');
 
-/* SAVE */
-function save(){
-  localStorage.setItem("bank",S.bank);
-  localStorage.setItem("debts",JSON.stringify(S.debts));
-  localStorage.setItem("saved",S.saved);
-  localStorage.setItem("mode",S.mode);
-  localStorage.setItem("history",JSON.stringify(S.history));
+function saveAll() {
+  localStorage.setItem('bankBalance', currentBankBalance);
+  localStorage.setItem('totalSaved', totalSaved);
+  localStorage.setItem('savingsGoal', savingsGoal);
+  localStorage.setItem('planStartDate', planStartDate.toISOString().slice(0,10));
+  localStorage.setItem('emergencyLog', JSON.stringify(emergencyLog));
+  localStorage.setItem('isLightMode', isLight);
+  localStorage.setItem('appPasscode', RESET_PASSCODE);
+  localStorage.setItem('originalDebt', debtOriginal);
+  localStorage.setItem('termYears', selectedTermYears);
 }
 
-/* CALC */
-function totalDebt(){
-  return S.debts.reduce((a,b)=>a+(+b.balance||0),0);
+function getDebtRows() {
+  return Array.from(document.querySelectorAll('#debtTableBody tr[data-row]')).map(tr => ({
+    bank: tr.querySelector('.bank-select')?.value || 'Other Credit Card',
+    balance: parseFloat(tr.querySelector('.balance-input')?.value) || 0,
+    rate: parseFloat(tr.querySelector('.rate-input')?.value) || 0,
+    minPayment: parseFloat(tr.querySelector('.min-input')?.value) || 0
+  }));
 }
 
-function weekly(){
-  return Math.ceil(totalDebt()/260)||0;
+function saveDebts() { localStorage.setItem('debtsData', JSON.stringify(getDebtRows())); }
+
+function getAutoWeeklyPayment() {
+  const totalDebt = getDebtRows().reduce((s,r)=>s+r.balance, 0);
+  if (totalDebt === 0) return 0;
+  const totalWeeks = selectedTermYears * 52;
+  return Math.ceil(totalDebt / totalWeeks);
 }
 
-/* TOAST */
-function toast(m){
-  const t=document.getElementById("toast");
-  t.innerText=m;t.style.display="block";
-  setTimeout(()=>t.style.display="none",1200);
+function updateDisplayValues() {
+  const autoWeekly = getAutoWeeklyPayment();
+  const totalDebt = getDebtRows().reduce((s,r)=>s+r.balance, 0);
+  document.getElementById('heroWeeklyPayment').textContent = money(autoWeekly);
+  document.getElementById('planRequiredWeekly').innerHTML = money(autoWeekly);
+  document.getElementById('autoPaymentPreview').textContent = money(autoWeekly);
+  
+  const sumMinMonthly = getDebtRows().reduce((s,r)=>s + r.minPayment, 0);
+  document.getElementById('sumMinWeeklyDisplay').textContent = money(sumMinMonthly);
+  
+  updateWeeksRemaining();
 }
 
-/* STRATEGY */
-function sort(){
-  return [...S.debts].sort((a,b)=>{
-    return S.mode==="avalanche"
-    ? b.rate-a.rate
-    : a.balance-b.balance;
+function calculateTotalDebt() {
+  let totalBalance = 0;
+  let totalMinPaymentsMonthly = 0;
+  document.querySelectorAll('#debtTableBody tr[data-row]').forEach(tr => {
+    totalBalance += parseFloat(tr.querySelector('.balance-input')?.value) || 0;
+    totalMinPaymentsMonthly += parseFloat(tr.querySelector('.min-input')?.value) || 0;
   });
+  
+  // Combine balance + monthly minimums
+  const totalWithMinPayments = totalBalance + totalMinPaymentsMonthly;
+  
+  // Display COMBINED TOTAL in large bold orange, with breakdown below
+  document.getElementById('heroTotalDebt').innerHTML = `${money(totalWithMinPayments)}<span style="font-size: 0.55rem; color: var(--text2); display: block; margin-top: 4px; font-family: 'DM Sans', sans-serif; font-weight: 400;">${money(totalBalance)} + ${money(totalMinPaymentsMonthly)}/mth</span>`;
+  document.getElementById('debtCountBadge').textContent = getDebtRows().length;
+  document.getElementById('planTotalDebt').textContent = money(totalBalance);
+  updateProgress(totalBalance);
+  checkDebtFree(totalBalance);
+  updateDisplayValues();
+  return totalBalance;
 }
 
-/* APPLY PAYMENT */
-function pay(amount){
-  let list=sort();
-  let r=amount;
+function updateProgress(totalBalance) {
+  if (!debtOriginal || debtOriginal < totalBalance) { debtOriginal = totalBalance || 1; localStorage.setItem('originalDebt', debtOriginal); }
+  if (!debtOriginal || totalBalance === 0) return;
+  const paid = Math.max(0, debtOriginal - totalBalance);
+  const pct = Math.min(100, Math.round((paid / debtOriginal) * 100));
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressPercent').textContent = pct + '% paid off';
+}
 
-  list.forEach(d=>{
-    if(!r)return;
-    let p=Math.min(d.balance,r);
-    d.balance-=p;r-=p;
-    S.history.push({a:p,b:d.bank,t:Date.now()});
+function checkDebtFree(totalBalance) {
+  const banner = document.getElementById('debtFreeBanner');
+  if (totalBalance <= 0 && debtOriginal > 0) banner.classList.add('visible');
+  else banner.classList.remove('visible');
+}
+
+function updateBankDisplay() { document.getElementById('heroBankDisplay').textContent = money(currentBankBalance); }
+function updateSavingsDisplay() { document.getElementById('totalSavingsDisplay').textContent = money(totalSaved); }
+
+function updateIncomeExpenseTotals() {
+  const weeklySalary = parseFloat(document.getElementById('weeklySalary').value) || 0;
+  const additionalIncome = parseFloat(document.getElementById('additionalIncome').value) || 0;
+  const monthlyIncome = (weeklySalary * 52 / 12) + additionalIncome;
+  const expenses = ['rent','carLoan','loanPayment','coffee','zip','other','extra1','extra2'].reduce((sum,id) => sum + (parseFloat(document.getElementById(id).value) || 0), 0);
+  const surplus = monthlyIncome - expenses;
+  document.getElementById('totalIncomeDisplay').textContent = Math.round(monthlyIncome).toLocaleString();
+  document.getElementById('totalExpensesDisplay').textContent = Math.round(expenses).toLocaleString();
+  document.getElementById('surplusDisplay').textContent = Math.round(surplus).toLocaleString();
+  document.getElementById('heroSurplus').textContent = money(surplus);
+  return surplus;
+}
+
+function updateWeeksRemaining() {
+  const totalDebt = getDebtRows().reduce((s,r)=>s+r.balance, 0);
+  const weeklyAmount = getAutoWeeklyPayment();
+  if (totalDebt > 0 && weeklyAmount > 0) {
+    const weeks = Math.ceil(totalDebt / weeklyAmount);
+    document.getElementById('weeksRemaining').textContent = weeks;
+    const target = new Date(planStartDate);
+    target.setDate(target.getDate() + weeks * 7);
+    document.getElementById('planTargetDate').textContent = target.toLocaleDateString('en-AU');
+    document.getElementById('targetDateLabel').textContent = `Target: ${target.toLocaleDateString('en-AU')}`;
+  } else {
+    document.getElementById('weeksRemaining').textContent = '--';
+    document.getElementById('planTargetDate').textContent = '—';
+  }
+}
+
+function renderDebtTable(rows) {
+  const tbody = document.getElementById('debtTableBody');
+  tbody.innerHTML = '';
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="6" style="padding:16px; text-align: center; color: var(--text2);">📋 Click + Add Debt to get started</td></tr>'; calculateTotalDebt(); saveDebts(); return; }
+  rows.forEach(row => {
+    const tr = document.createElement('tr'); tr.setAttribute('data-row','1');
+    const tdBank = document.createElement('td'); const sel = document.createElement('select'); sel.className = 'bank-select';
+    bankList.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; if (b === row.bank) o.selected = true; sel.appendChild(o); }); tdBank.appendChild(sel);
+    const tdBal = document.createElement('td'); const balInp = document.createElement('input'); balInp.type = 'number'; balInp.value = row.balance; balInp.className = 'balance-input'; balInp.step = '10'; tdBal.appendChild(balInp);
+    const tdRate = document.createElement('td'); const rateInp = document.createElement('input'); rateInp.type = 'number'; rateInp.value = row.rate; rateInp.className = 'rate-input'; rateInp.step = '0.1'; tdRate.appendChild(rateInp);
+    const tdMin = document.createElement('td'); const minInp = document.createElement('input'); minInp.type = 'number'; minInp.value = row.minPayment; minInp.className = 'min-input'; minInp.step = '1'; minInp.readOnly = true; tdMin.appendChild(minInp);
+    const tdQ = document.createElement('td'); const qBtn = document.createElement('button'); qBtn.textContent = 'Pay $50'; qBtn.className = 'btn-sm'; tdQ.appendChild(qBtn);
+    const tdDel = document.createElement('td'); const delBtn = document.createElement('button'); delBtn.textContent = '✖'; delBtn.className = 'btn-sm btn-danger'; tdDel.appendChild(delBtn);
+    tr.append(tdBank, tdBal, tdRate, tdMin, tdQ, tdDel); tbody.appendChild(tr);
+    const refresh = () => {
+      const balance = parseFloat(balInp.value) || 0;
+      const rate = bankDatabase[sel.value] || 18.0;
+      rateInp.value = rate;
+      
+      // Calculate AU standard minimum payment (MONTHLY)
+      const auMinPaymentMonthly = calculateAUMinPayment(balance, rate);
+      minInp.value = auMinPaymentMonthly;
+      
+      calculateTotalDebt();
+      saveDebts();
+      buildDestroyPlan();
+      updateDisplayValues();
+    };
+    sel.onchange = refresh;
+    balInp.oninput = refresh;
+    qBtn.onclick = () => { let nb = Math.max(0, (parseFloat(balInp.value)||0) - 50); balInp.value = nb; refresh(); alert(`✅ Paid $50 to ${sel.value}`); };
+    delBtn.onclick = () => { if (tbody.children.length > 1) { tr.remove(); calculateTotalDebt(); } else renderDebtTable([]); };
+    refresh();
   });
+  calculateTotalDebt(); saveDebts();
 }
 
-/* RENDER */
-function render(){
-  let tb=document.getElementById("debtTableBody");
-  tb.innerHTML="";
+function addNewDebtRow() { const rows = getDebtRows(); rows.push({ bank:'Other Credit Card', balance:0, rate:18.0, minPayment:0 }); renderDebtTable(rows); }
+function loadDebts() { const saved = localStorage.getItem('debtsData'); renderDebtTable(saved ? JSON.parse(saved) : []); }
+function resetDebtsToZero() { const rows = getDebtRows().map(r => ({ ...r, balance:0, minPayment:0 })); renderDebtTable(rows); alert('✅ All debts reset to $0.'); }
 
-  S.debts.forEach((d,i)=>{
-    let tr=document.createElement("tr");
+function applyDebtPayment(amount) {
+  let rows = getDebtRows().filter(r=>r.balance>0).sort((a,b)=>b.rate-a.rate);
+  let remaining = amount;
+  rows.forEach(r => { if(remaining<=0) return; let pay = Math.min(r.balance, remaining); r.balance -= pay; remaining -= pay; });
+  renderDebtTable(rows);
+}
 
-    tr.innerHTML=`
-      <td><input value="${d.bank}" class="bank"></td>
-      <td><input type="number" value="${d.balance}" class="bal"></td>
-      <td>${d.rate||18}%</td>
-      <td><button class="pay">-50</button></td>
-      <td><button class="del">X</button></td>
-    `;
+function buildDestroyPlan() {
+  const rows = getDebtRows().filter(r => r.balance > 0).sort((a,b)=>b.rate-a.rate);
+  const container = document.getElementById('planStepsContainer');
+  if (!rows.length) { container.innerHTML = '<div class="tip">📋 Add debts to see your personalized payoff plan.</div>'; document.getElementById('strategyComparison').innerHTML = 'No debts added yet.'; return; }
+  container.innerHTML = rows.map((r,i)=>`<div class="plan-step"><div class="step-num">${i+1}</div><div class="step-body"><h4>${r.bank}</h4><p>Balance: <span class="highlight">${money(r.balance)}</span> | Rate: <span class="warn">${r.rate}%</span> | Min weekly: <span class="good">${money(r.minPayment)}</span></p></div></div>`).join('');
+  const highest = rows[0];
+  document.getElementById('strategyComparison').innerHTML = `🔥 Pay highest interest first: <strong>${highest.bank}</strong> (${highest.rate}%). Auto payment = ${money(getAutoWeeklyPayment())}/week. Focus on eliminating high-interest debts first.`;
+}
 
-    tr.querySelector(".bal").oninput=e=>{
-      S.debts[i].balance=+e.target.value;
-      sync();
+function updateWeeksTracker() {
+  const tracker = document.getElementById('weeklyTracker');
+  const start = new Date(planStartDate);
+  tracker.innerHTML = '';
+  const autoPay = getAutoWeeklyPayment();
+  for (let i=0; i<156; i++) {
+    let d = new Date(start); d.setDate(d.getDate() + i*7);
+    let chip = document.createElement('div'); chip.className = 'week-chip';
+    chip.innerHTML = `<div class="wk">W${i+1}</div><div class="amt">${money(autoPay)}</div>`;
+    chip.onclick = () => {
+      let payment = getAutoWeeklyPayment();
+      if(currentBankBalance >= payment && payment > 0){
+        currentBankBalance -= payment;
+        applyDebtPayment(payment);
+        totalSaved += payment;
+        updateBankDisplay(); updateSavingsDisplay(); saveAll();
+        chip.style.opacity = '0.5'; chip.style.pointerEvents = 'none';
+        chip.classList.add('paid');
+        alert(`✅ Paid ${money(payment)} toward highest interest debt!`);
+      } else alert(payment <= 0 ? "📋 No active debt." : "💳 Insufficient bank balance.");
     };
-
-    tr.querySelector(".pay").onclick=()=>{
-      pay(50);
-      S.bank-=50;
-      toast("Paid $50");
-      sync();
-    };
-
-    tr.querySelector(".del").onclick=()=>{
-      S.debts.splice(i,1);
-      sync();
-    };
-
-    tb.appendChild(tr);
-  });
-
-  document.getElementById("heroDebt").innerText=money(totalDebt());
-  document.getElementById("heroBank").innerText=money(S.bank);
-  document.getElementById("heroWeekly").innerText=money(weekly());
-
-  save();
+    tracker.appendChild(chip);
+  }
+  document.getElementById('startDatePreview').textContent = start.toLocaleDateString('en-AU');
+  document.getElementById('autoPaymentPreview').textContent = money(autoPay);
 }
 
-/* SYNC */
-function sync(){render();}
-
-/* ACTIONS */
-function addDebt(){
-  S.debts.push({bank:"Other",balance:0,rate:18});
-  sync();
-}
-
-function payday(){
-  S.bank+=50;
-  S.saved+=50;
-  sync();
-}
-
-/* TABS */
-document.querySelectorAll(".tab-btn").forEach(b=>{
-  b.onclick=()=>{
-    document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));
-    document.querySelectorAll(".tab-panel").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active");
-    document.getElementById(b.dataset.tab).classList.add("active");
+function showPasscodePrompt(callback) {
+  const modal = document.getElementById('passcodeModal');
+  const inp = document.getElementById('passcodeInput');
+  modal.style.display = 'flex';
+  inp.value = '';
+  inp.focus();
+  const confirm = () => {
+    if(inp.value === RESET_PASSCODE){
+      modal.style.display='none';
+      callback(true);
+    } else {
+      alert('❌ Wrong passcode');
+      inp.value = '';
+      inp.focus();
+    }
   };
-});
+  document.getElementById('passcodeConfirmBtn').onclick = confirm;
+  document.getElementById('passcodeCancelBtn').onclick = () => { modal.style.display='none'; callback(false); };
+  inp.onkeypress = e => { if(e.key === 'Enter') confirm(); };
+}
 
-/* INIT */
-document.getElementById("addDebtRowBtn").onclick=addDebt;
-document.getElementById("quickAddPaymentBtn").onclick=()=>pay(50);
-document.getElementById("manualSalaryBtn").onclick=payday;
-document.getElementById("undoBtn").onclick=()=>{S.history.pop();sync();};
-document.getElementById("modeBtn").onclick=()=>{
-  S.mode=S.mode==="avalanche"?"snowball":"avalanche";
-  sync();
-};
-document.getElementById("resetBtn").onclick=()=>{
-  if(confirm("Reset?")){localStorage.clear();location.reload();}
-};
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(btn.dataset.tab).classList.add('active');
+  if(btn.dataset.tab === 'tab-plan') buildDestroyPlan();
+}));
 
-sync();
+function init() {
+  document.body.classList.toggle('light', isLight);
+  document.getElementById('darkToggleBtn').textContent = isLight ? '🌙 Dark' : '☀️ Light';
+  document.getElementById('planStartDate').value = planStartDate.toISOString().slice(0,10);
+  document.getElementById('termSelector').value = selectedTermYears;
+  document.getElementById('bankBalanceInput').value = currentBankBalance;
+  document.getElementById('savingsGoalInput').value = savingsGoal;
+
+  ['weeklySalary','additionalIncome','rent','carLoan','loanPayment','coffee','zip','other','extra1','extra2'].forEach(id=>
+    document.getElementById(id)?.addEventListener('input',()=>{ updateIncomeExpenseTotals(); saveAll(); })
+  );
+
+  document.getElementById('updateBankBtn').onclick = () => {
+    currentBankBalance = parseFloat(document.getElementById('bankBalanceInput').value) || 0;
+    updateBankDisplay();
+    saveAll();
+  };
+
+  document.getElementById('updateSavingsGoalBtn').onclick = () => {
+    savingsGoal = parseFloat(document.getElementById('savingsGoalInput').value) || 0;
+    updateSavingsDisplay();
+    saveAll();
+  };
+
+  document.getElementById('updateTermBtn').onclick = () => {
+    planStartDate = new Date(document.getElementById('planStartDate').value);
+    selectedTermYears = parseInt(document.getElementById('termSelector').value);
+    updateWeeksTracker();
+    updateDisplayValues();
+    saveAll();
+    alert(`✅ Term set to ${selectedTermYears} years. Auto weekly payment: ${money(getAutoWeeklyPayment())}`);
+  };
+
+  document.getElementById('addDebtRowBtn').onclick = addNewDebtRow;
+  document.getElementById('resetDebtBtn').onclick = () => showPasscodePrompt(ok => ok && resetDebtsToZero());
+  document.getElementById('resetDebtBtnSettings').onclick = () => showPasscodePrompt(ok => ok && resetDebtsToZero());
+  document.getElementById('resetFullBtn').onclick = () => showPasscodePrompt(ok => { if(ok){ localStorage.clear(); location.reload(); } });
+  document.getElementById('resetFullBtnSettings').onclick = () => showPasscodePrompt(ok => { if(ok){ localStorage.clear(); location.reload(); } });
+  document.getElementById('quickAddPaymentBtn').onclick = () => { applyDebtPayment(50); calculateTotalDebt(); };
+  document.getElementById('manualSalaryBtn').onclick = () => { currentBankBalance += savingsGoal; totalSaved += savingsGoal; updateBankDisplay(); updateSavingsDisplay(); saveAll(); alert(`💰 Payday! +${money(savingsGoal)}`); };
+  document.getElementById('darkToggleBtn').onclick = () => { isLight = !isLight; document.body.classList.toggle('light', isLight); document.getElementById('darkToggleBtn').textContent = isLight ? '🌙 Dark' : '☀️ Light'; saveAll(); };
+  document.getElementById('changePasscodeBtn').onclick = () => { let newCode = document.getElementById('newPasscodeInput').value; if(newCode.length===4 && /^\d+$/.test(newCode)){ RESET_PASSCODE = newCode; document.getElementById('newPasscodeInput').value = ''; saveAll(); alert('✅ Passcode updated.'); } else alert('❌ Enter 4 digits.'); };
+
+  loadDebts();
+  updateBankDisplay();
+  updateSavingsDisplay();
+  updateIncomeExpenseTotals();
+  updateWeeksTracker();
+  calculateTotalDebt();
+  saveAll();
+}
+
+init();
 </script>
-
+</div>
 </body>
 </html>
