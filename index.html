@@ -1,242 +1,263 @@
-// =====================
-// DEBT DESTROYER v2 CORE
-// =====================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Debt Destroyer Pro v3 | Finance Engine</title>
 
-const bankDatabase = {
-  "CommBank": 18.2, "NAB": 16.5, "Westpac": 15.99, "ANZ": 17.8,
-  "Latitude": 21.5, "Afterpay": 0, "Zip Pay": 0, "HSBC": 14.9,
-  "Coles Credit": 19.99, "Kogan Card": 22.9,
-  "Flexi Loan": 17.5, "Other Credit Card": 18.0,
-  "Personal Loan": 12.5
-};
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-const bankList = Object.keys(bankDatabase);
-const money = n => '$' + Math.round(n || 0).toLocaleString();
-
-// =====================
-// STATE
-// =====================
-let state = {
-  passcode: localStorage.getItem('appPasscode') || '1234',
-  bank: parseFloat(localStorage.getItem('bankBalance') || 0),
-  saved: parseFloat(localStorage.getItem('totalSaved') || 0),
-  goal: parseFloat(localStorage.getItem('savingsGoal') || 50),
-  start: new Date(localStorage.getItem('planStartDate') || '2026-05-27'),
-  term: parseInt(localStorage.getItem('termYears') || 5),
-  debts: JSON.parse(localStorage.getItem('debtsData') || '[]'),
-  originalDebt: parseFloat(localStorage.getItem('originalDebt') || 0),
-  history: JSON.parse(localStorage.getItem('history') || '[]'),
-  light: localStorage.getItem('isLightMode') === 'true'
-};
-
-// =====================
-// TOAST
-// =====================
-function toast(msg){
-  const el = document.getElementById('toast');
-  el.innerText = msg;
-  el.style.display = 'block';
-  clearTimeout(window.__t);
-  window.__t = setTimeout(()=> el.style.display='none', 1800);
+<style>
+/* ===== YOUR ORIGINAL CSS (UNCHANGED) ===== */
+:root {
+  --bg:#0d1117; --surface:#161b22; --surface2:#1c2333;
+  --border:#30363d; --accent:#f0883e; --accent2:#58a6ff;
+  --danger:#f85149; --success:#3fb950; --warning:#e3b341;
+  --purple:#bc8cff; --text:#e6edf3; --text2:#8b949e;
+  --radius:16px;
 }
+body{margin:0;font-family:DM Sans;background:var(--bg);color:var(--text);}
+.app-shell{max-width:520px;margin:auto;}
+.app-header{display:flex;justify-content:space-between;padding:10px;background:var(--surface);}
+.hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px;}
+.stat-card{background:var(--surface);padding:10px;border-radius:12px;}
+.tab-bar{display:flex;overflow-x:auto;background:var(--surface);}
+.tab-btn{padding:10px;border:none;background:none;color:var(--text2);}
+.tab-btn.active{color:var(--accent);}
+.tab-panel{display:none;padding:10px;}
+.tab-panel.active{display:block;}
+.card{background:var(--surface);padding:10px;margin:10px;border-radius:12px;}
+.debt-table{width:100%;font-size:12px;}
+button{cursor:pointer;}
+</style>
+</head>
 
-// =====================
-// SAVE
-// =====================
+<body>
+<div class="app-shell">
+
+<!-- HEADER -->
+<div class="app-header">
+  <div>💸 Debt Destroyer v3</div>
+  <button id="modeBtn">Switch Mode</button>
+</div>
+
+<!-- HERO -->
+<div class="hero-grid">
+  <div class="stat-card">Debt<br><b id="heroDebt">$0</b></div>
+  <div class="stat-card">Bank<br><b id="heroBank">$0</b></div>
+  <div class="stat-card">Weekly<br><b id="heroWeekly">$0</b></div>
+</div>
+
+<!-- QUICK ACTIONS -->
+<div class="card">
+  <button id="addDebtRowBtn">+ Add Debt</button>
+  <button id="quickAddPaymentBtn">Pay $50</button>
+  <button id="manualSalaryBtn">Payday</button>
+  <button id="undoBtn">Undo</button>
+</div>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="debts">Debts</button>
+  <button class="tab-btn" data-tab="income">Income</button>
+  <button class="tab-btn" data-tab="tracker">Tracker</button>
+  <button class="tab-btn" data-tab="plan">Plan</button>
+  <button class="tab-btn" data-tab="settings">Settings</button>
+</div>
+
+<!-- DEBTS -->
+<div class="tab-panel active" id="debts">
+  <div class="card">
+    <table class="debt-table">
+      <tbody id="debtTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- INCOME -->
+<div class="tab-panel" id="income">
+  <div class="card">
+    <input id="salary" placeholder="Weekly Salary">
+    <input id="expenses" placeholder="Monthly Expenses">
+    <div>Surplus: <span id="surplus">0</span></div>
+  </div>
+</div>
+
+<!-- TRACKER -->
+<div class="tab-panel" id="tracker">
+  <div class="card">Weekly tracker (simplified v3)</div>
+</div>
+
+<!-- PLAN -->
+<div class="tab-panel" id="plan">
+  <div class="card">
+    <b>Strategy:</b> <span id="strategy">Avalanche</span>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="tab-panel" id="settings">
+  <div class="card">
+    <button id="resetBtn">Reset All</button>
+  </div>
+</div>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+background:#222;padding:8px 12px;border-radius:10px;display:none;color:#fff;"></div>
+
+<script>
+/* =========================
+   PRO FINANCE APP v3 ENGINE
+   ========================= */
+
+const BANKS = {
+  "CommBank":18.2,"NAB":16.5,"Westpac":15.9,"ANZ":17.8,
+  "Afterpay":0,"Zip Pay":0,"Other":18
+};
+
+const money = n => "$" + Math.round(n||0).toLocaleString();
+
+let S = {
+  bank:+localStorage.getItem("bank")||0,
+  debts:JSON.parse(localStorage.getItem("debts")||"[]"),
+  saved:+localStorage.getItem("saved")||0,
+  mode:localStorage.getItem("mode")||"avalanche",
+  history:JSON.parse(localStorage.getItem("history")||"[]")
+};
+
+/* SAVE */
 function save(){
-  localStorage.setItem('bankBalance', state.bank);
-  localStorage.setItem('totalSaved', state.saved);
-  localStorage.setItem('savingsGoal', state.goal);
-  localStorage.setItem('planStartDate', state.start.toISOString().slice(0,10));
-  localStorage.setItem('termYears', state.term);
-  localStorage.setItem('debtsData', JSON.stringify(state.debts));
-  localStorage.setItem('originalDebt', state.originalDebt);
-  localStorage.setItem('history', JSON.stringify(state.history));
-  localStorage.setItem('appPasscode', state.passcode);
-  localStorage.setItem('isLightMode', state.light);
+  localStorage.setItem("bank",S.bank);
+  localStorage.setItem("debts",JSON.stringify(S.debts));
+  localStorage.setItem("saved",S.saved);
+  localStorage.setItem("mode",S.mode);
+  localStorage.setItem("history",JSON.stringify(S.history));
 }
 
-// =====================
-// CALCS
-// =====================
+/* CALC */
 function totalDebt(){
-  return state.debts.reduce((s,d)=>s+(+d.balance||0),0);
+  return S.debts.reduce((a,b)=>a+(+b.balance||0),0);
 }
 
-function autoWeekly(){
-  const t = totalDebt();
-  if(!t) return 0;
-  return Math.ceil(t / (state.term * 52));
+function weekly(){
+  return Math.ceil(totalDebt()/260)||0;
 }
 
-function distributeMin(){
-  const t = totalDebt();
-  const w = autoWeekly();
-  state.debts.forEach(d=>{
-    d.min = t ? Math.max(5, Math.round((d.balance/t)*w)) : 0;
+/* TOAST */
+function toast(m){
+  const t=document.getElementById("toast");
+  t.innerText=m;t.style.display="block";
+  setTimeout(()=>t.style.display="none",1200);
+}
+
+/* STRATEGY */
+function sort(){
+  return [...S.debts].sort((a,b)=>{
+    return S.mode==="avalanche"
+    ? b.rate-a.rate
+    : a.balance-b.balance;
   });
 }
 
-// =====================
-// RENDER
-// =====================
-function renderDebts(){
-  const tbody = document.getElementById('debtTableBody');
-  tbody.innerHTML = '';
+/* APPLY PAYMENT */
+function pay(amount){
+  let list=sort();
+  let r=amount;
 
-  if(!state.debts.length){
-    tbody.innerHTML = '<tr><td colspan="6">Add a debt to start</td></tr>';
-    return;
-  }
+  list.forEach(d=>{
+    if(!r)return;
+    let p=Math.min(d.balance,r);
+    d.balance-=p;r-=p;
+    S.history.push({a:p,b:d.bank,t:Date.now()});
+  });
+}
 
-  state.debts.forEach((d,i)=>{
-    const tr = document.createElement('tr');
+/* RENDER */
+function render(){
+  let tb=document.getElementById("debtTableBody");
+  tb.innerHTML="";
 
-    tr.innerHTML = `
-      <td>
-        <select class="bank-select">
-          ${bankList.map(b=>`<option ${b===d.bank?'selected':''}>${b}</option>`).join('')}
-        </select>
-      </td>
-      <td><input class="balance" type="number" value="${d.balance||0}"></td>
-      <td><input class="rate" type="number" value="${d.rate||bankDatabase[d.bank]||18}"></td>
-      <td class="min">${money(d.min||0)}</td>
-      <td><button class="pay">-$50</button></td>
-      <td><button class="del">✖</button></td>
+  S.debts.forEach((d,i)=>{
+    let tr=document.createElement("tr");
+
+    tr.innerHTML=`
+      <td><input value="${d.bank}" class="bank"></td>
+      <td><input type="number" value="${d.balance}" class="bal"></td>
+      <td>${d.rate||18}%</td>
+      <td><button class="pay">-50</button></td>
+      <td><button class="del">X</button></td>
     `;
 
-    const bank = tr.querySelector('.bank-select');
-    const bal = tr.querySelector('.balance');
-    const rate = tr.querySelector('.rate');
-    const pay = tr.querySelector('.pay');
-    const del = tr.querySelector('.del');
-
-    const update = ()=>{
-      d.bank = bank.value;
-      d.balance = Math.max(0, parseFloat(bal.value)||0);
-      d.rate = parseFloat(rate.value)||0;
-
-      distributeMin();
+    tr.querySelector(".bal").oninput=e=>{
+      S.debts[i].balance=+e.target.value;
       sync();
     };
 
-    bank.onchange = ()=>{ rate.value = bankDatabase[bank.value]; update(); };
-    bal.oninput = debounce(update, 200);
-    rate.oninput = debounce(update, 200);
-
-    pay.onclick = ()=>{
-      if(d.balance<=0) return;
-      const amt = Math.min(50,d.balance);
-      d.balance -= amt;
-      state.bank -= amt;
-
-      state.history.push({type:'pay',amt,debt:d.bank,date:Date.now()});
-
-      toast(`Paid ${money(amt)} → ${d.bank}`);
+    tr.querySelector(".pay").onclick=()=>{
+      pay(50);
+      S.bank-=50;
+      toast("Paid $50");
       sync();
     };
 
-    del.onclick = ()=>{
-      state.debts.splice(i,1);
+    tr.querySelector(".del").onclick=()=>{
+      S.debts.splice(i,1);
       sync();
     };
 
-    tbody.appendChild(tr);
+    tb.appendChild(tr);
   });
 
-  distributeMin();
-  syncStats();
-}
+  document.getElementById("heroDebt").innerText=money(totalDebt());
+  document.getElementById("heroBank").innerText=money(S.bank);
+  document.getElementById("heroWeekly").innerText=money(weekly());
 
-// =====================
-// SYNC UI
-// =====================
-function syncStats(){
-  const t = totalDebt();
-  document.getElementById('heroTotalDebt').innerText = money(t);
-  document.getElementById('heroWeeklyPayment').innerText = money(autoWeekly());
-  document.getElementById('heroBankDisplay').innerText = money(state.bank);
-  document.getElementById('totalSavingsDisplay').innerText = money(state.saved);
-  document.getElementById('debtCountBadge').innerText = state.debts.length;
-}
-
-// full sync
-function sync(){
-  renderDebts();
-  syncStats();
   save();
 }
 
-// =====================
-// DEBOUNCE
-// =====================
-function debounce(fn,ms){
-  let t;
-  return (...args)=>{
-    clearTimeout(t);
-    t=setTimeout(()=>fn(...args),ms);
-  };
-}
+/* SYNC */
+function sync(){render();}
 
-// =====================
-// ACTIONS
-// =====================
+/* ACTIONS */
 function addDebt(){
-  state.debts.push({
-    bank:'Other Credit Card',
-    balance:0,
-    rate:18,
-    min:0
-  });
+  S.debts.push({bank:"Other",balance:0,rate:18});
   sync();
 }
 
-function quickPay(){
-  const w = autoWeekly();
-  if(!w) return toast("No active debt");
-
-  let pay = Math.min(state.bank,w);
-  if(pay<=0) return toast("Insufficient balance");
-
-  state.bank -= pay;
-  state.saved += pay;
-
-  let remaining = pay;
-  state.debts.sort((a,b)=>b.rate-a.rate).forEach(d=>{
-    if(!remaining) return;
-    let p = Math.min(d.balance,remaining);
-    d.balance -= p;
-    remaining -= p;
-  });
-
-  toast(`Auto paid ${money(pay)}`);
+function payday(){
+  S.bank+=50;
+  S.saved+=50;
   sync();
 }
 
-// =====================
-// INIT
-// =====================
-function init(){
-  document.body.classList.toggle('light',state.light);
-
-  document.getElementById('addDebtRowBtn').onclick = addDebt;
-  document.getElementById('quickAddPaymentBtn').onclick = quickPay;
-
-  document.getElementById('manualSalaryBtn').onclick = ()=>{
-    state.bank += state.goal;
-    state.saved += state.goal;
-    toast("Payday added");
-    sync();
+/* TABS */
+document.querySelectorAll(".tab-btn").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    document.getElementById(b.dataset.tab).classList.add("active");
   };
+});
 
-  document.getElementById('resetFullBtn').onclick = ()=>{
-    if(confirm("Reset everything?")){
-      localStorage.clear();
-      location.reload();
-    }
-  };
-
+/* INIT */
+document.getElementById("addDebtRowBtn").onclick=addDebt;
+document.getElementById("quickAddPaymentBtn").onclick=()=>pay(50);
+document.getElementById("manualSalaryBtn").onclick=payday;
+document.getElementById("undoBtn").onclick=()=>{S.history.pop();sync();};
+document.getElementById("modeBtn").onclick=()=>{
+  S.mode=S.mode==="avalanche"?"snowball":"avalanche";
   sync();
-}
+};
+document.getElementById("resetBtn").onclick=()=>{
+  if(confirm("Reset?")){localStorage.clear();location.reload();}
+};
 
-init();
+sync();
+</script>
+
+</body>
+</html>
