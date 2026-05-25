@@ -23,9 +23,6 @@
   --text2: #8b949e;
   --text3: #6e7681;
   --radius: 16px;
-  --radius-sm: 10px;
-  --radius-lg: 24px;
-  --shadow: 0 10px 32px rgba(0,0,0,0.3);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);
 }
 .light {
@@ -36,7 +33,6 @@
   --text: #1f2328;
   --text2: #636c76;
   --text3: #9198a1;
-  --shadow: 0 10px 32px rgba(0,0,0,0.08);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { width: 100%; overflow-x: hidden; }
@@ -45,46 +41,22 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  transition: background 0.3s, color 0.3s;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Enhanced animations */
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
-}
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
 .app-shell {
   width: 100%;
   max-width: 520px;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   flex: 1;
-  position: relative;
   animation: slideDown 0.5s ease-out;
 }
 
@@ -99,7 +71,6 @@ body {
   top: 0;
   z-index: 100;
   backdrop-filter: blur(12px);
-  width: 100%;
   box-shadow: var(--shadow-sm);
 }
 
@@ -137,9 +108,7 @@ body {
   font-size: 0.7rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  transition: all 0.2s;
 }
 
 .icon-btn:hover {
@@ -149,8 +118,6 @@ body {
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
-
-.icon-btn:active { transform: translateY(0); }
 
 .hero-grid {
   display: grid;
@@ -168,7 +135,7 @@ body {
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s;
   animation: slideUp 0.5s ease-out both;
 }
 
@@ -185,13 +152,7 @@ body {
   box-shadow: 0 8px 24px rgba(240,136,62,0.15);
 }
 
-.stat-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  transition: height 0.3s ease;
-}
-
-.stat-card:hover::before { height: 4px; }
-
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
 .stat-card.danger::before { background: var(--danger); }
 .stat-card.success::before { background: var(--success); }
 .stat-card.warning::before { background: var(--warning); }
@@ -220,10 +181,7 @@ body {
   font-size: 0.6rem;
   color: var(--text2);
   margin-top: 4px;
-  transition: color 0.3s;
 }
-
-.stat-card:hover .stat-sub { color: var(--accent); }
 
 @media (max-width: 480px) {
   .hero-grid { grid-template-columns: 1fr 1fr; }
@@ -247,42 +205,24 @@ body {
   font-size: 0.72rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s;
   text-align: center;
   width: 100%;
-  position: relative;
-  overflow: hidden;
 }
-
-.qbtn::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: rgba(255,255,255,0.1);
-  transition: left 0.3s;
-}
-
-.qbtn:hover::before { left: 100%; }
 
 .qbtn:hover { border-color: var(--accent2); transform: translateY(-2px); }
-.qbtn:active { transform: translateY(0); }
-
 .qbtn.primary {
   background: linear-gradient(135deg, var(--accent), #ff6b35);
   color: white;
   border-color: var(--accent);
   box-shadow: 0 4px 12px rgba(240,136,62,0.3);
 }
-
 .qbtn.primary:hover { box-shadow: 0 6px 16px rgba(240,136,62,0.4); }
-
 .qbtn.danger {
   background: rgba(248,81,73,0.1);
   color: var(--danger);
   border-color: var(--danger);
 }
-
 .qbtn.danger:hover { background: var(--danger); color: white; }
 
 .setup-strip {
@@ -292,7 +232,6 @@ body {
   padding: 12px;
   display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
   justify-content: space-between;
-  animation: slideUp 0.5s ease-out 0.25s both;
 }
 
 .setup-strip label {
@@ -300,10 +239,7 @@ body {
   white-space: nowrap;
 }
 
-.input-group {
-  display: flex; align-items: center; gap: 6px;
-}
-
+.input-group { display: flex; align-items: center; gap: 6px; }
 .term-group {
   display: flex; align-items: center; gap: 8px;
   background: var(--surface2); padding: 6px 12px;
@@ -318,11 +254,9 @@ body {
   overflow-x: auto;
   scrollbar-width: none;
   padding: 0 8px;
-  gap: 0;
   position: sticky;
   top: 53px;
   z-index: 90;
-  width: 100%;
 }
 
 .tab-bar::-webkit-scrollbar { display: none; }
@@ -337,33 +271,14 @@ body {
   border-bottom: 3px solid transparent;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s;
   font-family: 'DM Sans', sans-serif;
-  position: relative;
 }
 
 .tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-.tab-btn.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-
-.tab-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: -3px; left: 0; right: 0;
-  height: 3px;
-  background: var(--accent);
-  animation: slideDown 0.3s ease-out;
-}
-
-.tab-panel {
-  display: none;
-  padding: 12px;
-  animation: fadeIn 0.3s ease-out;
-}
-
+.tab-panel { display: none; padding: 12px; }
 .tab-panel.active { display: block; }
 
 input[type=number], input[type=date], input[type=text], input[type=password], select {
@@ -374,18 +289,15 @@ input[type=number], input[type=date], input[type=text], input[type=password], se
   border-radius: 8px;
   font-size: 0.8rem;
   font-family: 'Space Mono', monospace;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  max-width: 100%;
+  transition: all 0.2s;
 }
 
 input[type=number] { width: 90px; }
 input[type=date] { width: 130px; }
-
 input:focus, select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(240,136,62,0.1);
-  transform: translateY(-2px);
 }
 
 .card {
@@ -394,8 +306,7 @@ input:focus, select:focus {
   border-radius: var(--radius);
   padding: 14px;
   margin-bottom: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: slideUp 0.5s ease-out;
+  transition: all 0.3s;
 }
 
 .card:hover { border-color: var(--accent2); box-shadow: 0 4px 12px rgba(88,166,255,0.1); }
@@ -407,29 +318,24 @@ input:focus, select:focus {
   letter-spacing: 0.5px;
   margin-bottom: 14px;
   display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
   color: var(--accent);
 }
 
-.card-title .badge {
+.badge {
   font-size: 0.65rem;
   padding: 3px 10px;
   border-radius: 12px;
   font-family: 'Space Mono', monospace;
   font-weight: 700;
-  animation: scaleIn 0.3s ease-out;
 }
 
 .badge-danger { background: rgba(248,81,73,0.15); color: var(--danger); }
 .badge-success { background: rgba(63,185,80,0.15); color: var(--success); }
-.badge-info { background: rgba(88,166,255,0.15); color: var(--accent2); }
 
 .debt-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.76rem;
-  animation: slideUp 0.4s ease-out;
 }
 
 .debt-table th {
@@ -440,24 +346,19 @@ input:focus, select:focus {
   text-align: center;
   border-bottom: 2px solid var(--border);
   font-size: 0.65rem;
-  letter-spacing: 0.5px;
 }
 
 .debt-table td {
   padding: 8px 2px;
   text-align: center;
   border-bottom: 1px solid var(--border);
-  transition: all 0.2s;
 }
 
-.debt-table tr:hover {
-  background: var(--surface2);
-}
+.debt-table tr:hover { background: var(--surface2); }
 
 .bank-select {
   width: 95px; padding: 6px; font-size: 0.7rem;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: 6px; cursor: pointer;
 }
 
 .balance-input, .rate-input, .min-input {
@@ -474,24 +375,6 @@ input:focus, select:focus {
   padding: 4px;
 }
 
-.tracker-grid::-webkit-scrollbar {
-  width: 6px;
-}
-
-.tracker-grid::-webkit-scrollbar-track {
-  background: var(--surface2);
-  border-radius: 3px;
-}
-
-.tracker-grid::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
-}
-
-.tracker-grid::-webkit-scrollbar-thumb:hover {
-  background: var(--accent2);
-}
-
 .week-chip {
   background: var(--surface2);
   border: 1.5px solid var(--border);
@@ -500,18 +383,7 @@ input:focus, select:focus {
   text-align: center;
   cursor: pointer;
   font-size: 0.65rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.week-chip::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: rgba(240,136,62,0.1);
-  transition: left 0.4s;
+  transition: all 0.2s;
 }
 
 .week-chip:hover {
@@ -520,15 +392,61 @@ input:focus, select:focus {
   box-shadow: 0 4px 12px rgba(240,136,62,0.15);
 }
 
-.week-chip:hover::before { left: 100%; }
-
-.week-chip.paid {
-  background: rgba(63,185,80,0.2);
-  border-color: var(--success);
-}
-
+.week-chip.paid { background: rgba(63,185,80,0.2); border-color: var(--success); }
 .week-chip .wk { font-weight: 800; display: block; }
 .week-chip .amt { font-weight: 800; color: var(--accent); margin-top: 3px; display: block; }
+
+.plan-bar-wrap {
+  background: var(--surface2);
+  border-radius: 20px;
+  height: 12px;
+  margin: 10px 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.plan-bar {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(240,136,62,0.4);
+}
+
+.plan-summary {
+  background: linear-gradient(135deg, rgba(240,136,62,0.12), rgba(88,166,255,0.08));
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(240,136,62,0.2);
+}
+
+.plan-summary h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.plan-stat {
+  background: var(--surface);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.plan-stat strong {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--accent);
+  display: block;
+}
 
 .plan-step {
   display: flex; gap: 12px;
@@ -539,7 +457,6 @@ input:focus, select:focus {
   padding: 12px;
   margin-bottom: 10px;
   transition: all 0.3s;
-  animation: slideUp 0.4s ease-out;
 }
 
 .plan-step:hover {
@@ -579,122 +496,6 @@ input:focus, select:focus {
 .warn { color: var(--warning); font-weight: 700; }
 .good { color: var(--success); font-weight: 700; }
 
-.plan-bar-wrap {
-  background: var(--surface2);
-  border-radius: 20px;
-  height: 12px;
-  margin: 10px 0;
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
-
-.plan-bar {
-  height: 100%;
-  border-radius: 20px;
-  background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 12px rgba(240,136,62,0.4);
-}
-
-.plan-summary {
-  background: linear-gradient(135deg, rgba(240,136,62,0.12), rgba(88,166,255,0.08));
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  margin-bottom: 16px;
-  border: 1px solid rgba(240,136,62,0.2);
-  animation: slideUp 0.5s ease-out;
-}
-
-.plan-summary h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.1rem;
-  margin-bottom: 6px;
-}
-
-.plan-summary > p {
-  font-size: 0.7rem;
-  color: var(--text2);
-}
-
-.plan-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 10px;
-}
-
-.plan-stat {
-  background: var(--surface);
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-}
-
-.plan-stat strong {
-  font-family: 'Space Mono', monospace;
-  font-size: 1.1rem;
-  color: var(--accent);
-  display: block;
-  margin-bottom: 4px;
-}
-
-.plan-stat { font-size: 0.65rem; color: var(--text2); }
-
-button {
-  background: var(--surface2);
-  border: 1.5px solid var(--border);
-  color: var(--text);
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'DM Sans', sans-serif;
-  position: relative;
-  overflow: hidden;
-}
-
-button:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
-button:active { transform: translateY(0); }
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent), #ff6b35);
-  color: white;
-  border-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(240,136,62,0.2);
-}
-
-.btn-primary:hover { box-shadow: 0 6px 16px rgba(240,136,62,0.3); }
-
-.btn-success {
-  background: linear-gradient(135deg, var(--success), #2da863);
-  color: white;
-  border-color: var(--success);
-}
-
-.btn-danger {
-  background: rgba(248,81,73,0.1);
-  color: var(--danger);
-  border-color: var(--danger);
-}
-
-.btn-danger:hover {
-  background: var(--danger);
-  color: white;
-}
-
-.btn-purple {
-  background: linear-gradient(135deg, var(--purple), #a66bff);
-  color: white;
-  border-color: var(--purple);
-}
-
-.btn-sm {
-  padding: 4px 10px;
-  font-size: 0.65rem;
-}
-
 .tip {
   background: linear-gradient(135deg, rgba(88,166,255,0.12), rgba(88,166,255,0.05));
   border-left: 4px solid var(--accent2);
@@ -702,24 +503,19 @@ button:active { transform: translateY(0); }
   font-size: 0.7rem;
   margin: 10px 0;
   border-radius: 6px;
-  line-height: 1.5;
 }
-
-.tip strong { color: var(--accent2); }
 
 .debt-free-banner {
   background: linear-gradient(135deg, rgba(63,185,80,0.2), rgba(63,185,80,0.08));
   border: 2px solid var(--success);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   padding: 16px;
   text-align: center;
   margin-bottom: 16px;
   display: none;
-  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .debt-free-banner.visible { display: block; }
-
 .debt-free-banner h2 {
   font-family: 'Syne', sans-serif;
   font-size: 1.3rem;
@@ -735,18 +531,16 @@ button:active { transform: translateY(0); }
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.2s ease-out;
 }
 
 .modal-box {
   background: var(--surface);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   padding: 24px;
   text-align: center;
   width: 280px;
   border: 1.5px solid var(--border);
   box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .modal-box h3 {
@@ -776,6 +570,47 @@ button:active { transform: translateY(0); }
   flex: 1;
 }
 
+button {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+button:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+button:active { transform: translateY(0); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #ff6b35);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(240,136,62,0.2);
+}
+
+.btn-primary:hover { box-shadow: 0 6px 16px rgba(240,136,62,0.3); }
+
+.btn-success {
+  background: linear-gradient(135deg, var(--success), #2da863);
+  color: white;
+  border-color: var(--success);
+}
+
+.btn-danger {
+  background: rgba(248,81,73,0.1);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.btn-danger:hover { background: var(--danger); color: white; }
+
+.btn-sm { padding: 4px 10px; font-size: 0.65rem; }
+
 .info-row {
   display: flex;
   justify-content: space-between;
@@ -803,7 +638,6 @@ button:active { transform: translateY(0); }
   font-weight: 600;
   color: var(--text2);
   text-transform: uppercase;
-  letter-spacing: 0.3px;
 }
 
 .fin-total {
@@ -843,40 +677,6 @@ button:active { transform: translateY(0); }
   flex: 1;
 }
 
-/* Tooltip */
-[data-tooltip] {
-  position: relative;
-  cursor: help;
-}
-
-[data-tooltip]:hover::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 120%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--accent);
-  color: white;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 0.65rem;
-  white-space: nowrap;
-  z-index: 1001;
-  animation: slideUp 0.2s ease-out;
-}
-
-/* Loading state */
-.loading {
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .modal-box { width: 90%; max-width: 260px; }
-  .plan-grid { grid-template-columns: 1fr; }
-}
-
-/* Smooth scroll */
 html { scroll-behavior: smooth; }
 </style>
 </head>
@@ -885,38 +685,38 @@ html { scroll-behavior: smooth; }
 <div class="app-header">
   <div class="app-logo"><div class="logo-icon">💸</div>DEBT DESTROYER</div>
   <div class="header-actions">
-    <button class="icon-btn" id="darkToggleBtn" data-tooltip="Switch theme">☀️ Light</button>
-    <button class="icon-btn" onclick="window.print()" data-tooltip="Print plan">🖨️ Print</button>
+    <button class="icon-btn" id="darkToggleBtn">☀️ Light</button>
+    <button class="icon-btn" onclick="window.print()">🖨️ Print</button>
   </div>
 </div>
 
 <div class="hero-grid">
-  <div class="stat-card danger" data-tooltip="Total outstanding debt"><div class="stat-label">💀 TOTAL DEBT</div><div class="stat-value" id="heroTotalDebt">$0</div></div>
-  <div class="stat-card success" data-tooltip="Available funds"><div class="stat-label">🏦 BANK BALANCE</div><div class="stat-value" id="heroBankDisplay">$0</div><div class="stat-sub">Available cash</div></div>
-  <div class="stat-card blue" data-tooltip="Income minus expenses"><div class="stat-label">📈 MONTHLY SURPLUS</div><div class="stat-value" id="heroSurplus">$0</div><div class="stat-sub">After expenses</div></div>
-  <div class="stat-card warning" data-tooltip="Weeks until debt free"><div class="stat-label">⏱️ WEEKS LEFT</div><div class="stat-value" id="weeksRemaining">--</div><div class="stat-sub" id="targetDateLabel">Select term</div></div>
-  <div class="stat-card accent" data-tooltip="Auto-calculated payment"><div class="stat-label">💰 AUTO WEEKLY PAYMENT</div><div class="stat-value" id="heroWeeklyPayment">$0</div><div class="stat-sub">Required to meet term</div></div>
-  <div class="stat-card purple" data-tooltip="Total paid so far"><div class="stat-label">💎 TOTAL SAVED</div><div class="stat-value" id="totalSavingsDisplay">$0</div><div class="stat-sub">Goal: $50/payday</div></div>
+  <div class="stat-card danger"><div class="stat-label">💀 TOTAL DEBT</div><div class="stat-value" id="heroTotalDebt">$0</div></div>
+  <div class="stat-card success"><div class="stat-label">🏦 BANK BALANCE</div><div class="stat-value" id="heroBankDisplay">$0</div><div class="stat-sub">Available cash</div></div>
+  <div class="stat-card blue"><div class="stat-label">📈 MONTHLY SURPLUS</div><div class="stat-value" id="heroSurplus">$0</div><div class="stat-sub">After expenses</div></div>
+  <div class="stat-card warning"><div class="stat-label">⏱️ WEEKS LEFT</div><div class="stat-value" id="weeksRemaining">--</div><div class="stat-sub" id="targetDateLabel">Select term</div></div>
+  <div class="stat-card accent"><div class="stat-label">💰 AUTO WEEKLY PAYMENT</div><div class="stat-value" id="heroWeeklyPayment">$0</div><div class="stat-sub">Required to meet term</div></div>
+  <div class="stat-card purple"><div class="stat-label">💎 TOTAL SAVED</div><div class="stat-value" id="totalSavingsDisplay">$0</div><div class="stat-sub">Goal: $50/payday</div></div>
 </div>
 
 <div class="quick-row">
-  <button class="qbtn primary" id="quickAddPaymentBtn" data-tooltip="Add $50 payment">➕ Extra Payment</button>
-  <button class="qbtn" id="manualSalaryBtn" data-tooltip="Add payday amount">💼 Force Payday</button>
-  <button class="qbtn" id="resetDebtBtn" data-tooltip="Clear all debts">⟳ Reset Debts</button>
-  <button class="qbtn danger" id="resetFullBtn" data-tooltip="Full reset">🗑️ Factory Reset</button>
+  <button class="qbtn primary" id="quickAddPaymentBtn">➕ Extra Payment</button>
+  <button class="qbtn" id="manualSalaryBtn">💼 Force Payday</button>
+  <button class="qbtn" id="resetDebtBtn">⟳ Reset Debts</button>
+  <button class="qbtn danger" id="resetFullBtn">🗑️ Factory Reset</button>
 </div>
 
 <div class="setup-strip">
-  <div class="input-group"><label>📅 Start:</label><input type="date" id="planStartDate" value="2026-05-27" data-tooltip="Plan start date"></div>
+  <div class="input-group"><label>📅 Start:</label><input type="date" id="planStartDate" value="2026-05-27"></div>
   <div class="term-group">
     <label>📆 Term:</label>
-    <select id="termSelector" data-tooltip="Payment term">
+    <select id="termSelector">
       <option value="1">1 Yr</option><option value="2">2 Yr</option><option value="3">3 Yr</option>
       <option value="4">4 Yr</option><option value="5" selected>5 Yr</option>
       <option value="6">6 Yr</option><option value="7">7 Yr</option>
     </select>
   </div>
-  <button class="btn-primary" id="updateTermBtn" data-tooltip="Apply changes">Apply</button>
+  <button class="btn-primary" id="updateTermBtn">Apply</button>
 </div>
 
 <div class="tab-bar">
@@ -928,21 +728,21 @@ html { scroll-behavior: smooth; }
 </div>
 
 <div class="tab-panel active" id="tab-debts">
-  <div id="debtFreeBanner" class="debt-free-banner"><h2>🎉 DEBT FREE! 🎉</h2><p style="color: var(--success); font-size: 0.75rem; margin-top: 6px;">You've achieved your goal!</p></div>
+  <div id="debtFreeBanner" class="debt-free-banner"><h2>🎉 DEBT FREE! 🎉</h2></div>
   <div class="card">
     <div class="card-title">💳 Debt Breakdown <span class="badge badge-danger" id="debtCountBadge">0</span></div>
     <div style="overflow-x:auto;">
       <table class="debt-table">
-        <thead><tr><th>Lender</th><th>Balance ($)</th><th>Interest %</th><th>Min Monthly ($)</th><th>Quick Pay</th><th></th></tr></thead>
+        <thead><tr><th>Bank</th><th>Product</th><th>Balance ($)</th><th>Interest %</th><th>Min Monthly ($)</th><th>Quick Pay</th><th></th></tr></thead>
         <tbody id="debtTableBody"></tbody>
       </table>
     </div>
-    <button class="btn-primary" id="addDebtRowBtn">+ Add Debt</button>
+    <button class="btn-primary" id="addDebtRowBtn" style="width: 100%; margin-top: 10px;">+ Add Debt</button>
     <div class="info-row" style="margin-top: 12px;">
       <span>📊 Sum of Minimum Monthly Payments:</span>
       <strong id="sumMinWeeklyDisplay" style="color: var(--accent); font-size: 0.9rem;">$0</strong>
     </div>
-    <div class="tip">✅ <strong>Auto-calculated:</strong> Monthly minimum = Interest charged + 1% of balance (AU standard). Minimum floor of $10/month. Change interest rate or balance above and minimum updates automatically.</div>
+    <div class="tip">✅ <strong>Auto-calculated:</strong> Monthly minimum = Interest charged + 1% of balance (AU standard). Minimum floor of $10/month.</div>
   </div>
   <div class="card"><div class="card-title">📉 Payoff Progress</div><div class="plan-bar-wrap"><div class="plan-bar" id="progressBar" style="width:0%"></div></div><div id="progressPercent" style="text-align:center; font-weight:800; margin-top:8px; font-size: 0.9rem;">0%</div></div>
 </div>
@@ -950,15 +750,14 @@ html { scroll-behavior: smooth; }
 <div class="tab-panel" id="tab-income">
   <div class="card"><div class="card-title">💰 Income</div><div class="fin-grid"><div class="fin-item"><label>Weekly Salary ($)</label><input type="number" id="weeklySalary" value="0"></div><div class="fin-item"><label>Additional Monthly ($)</label><input type="number" id="additionalIncome" value="0"></div></div><div class="fin-total"><span>Monthly Income</span><span class="val">$<span id="totalIncomeDisplay">0</span></span></div></div>
   <div class="card"><div class="card-title">📉 Monthly Expenses</div><div class="fin-grid"><div class="fin-item"><label>Rent/Mortgage</label><input type="number" id="rent" value="0"></div><div class="fin-item"><label>Car Loan</label><input type="number" id="carLoan" value="0"></div><div class="fin-item"><label>Loan Payment</label><input type="number" id="loanPayment" value="0"></div><div class="fin-item"><label>Coffee/Subs</label><input type="number" id="coffee" value="0"></div><div class="fin-item"><label>Zip/BNPL</label><input type="number" id="zip" value="0"></div><div class="fin-item"><label>Other</label><input type="number" id="other" value="0"></div><div class="fin-item"><label>Extra 1</label><input type="number" id="extra1" value="0"></div><div class="fin-item"><label>Extra 2</label><input type="number" id="extra2" value="0"></div></div><div class="fin-total"><span>Monthly Expenses</span><span class="val">$<span id="totalExpensesDisplay">0</span></span></div><div class="fin-total"><span>Monthly Surplus</span><span class="val">$<span id="surplusDisplay">0</span></span></div></div>
-  <div class="card"><div class="card-title">🏦 Bank & Savings</div><div class="bank-row"><label>Bank Balance:</label><input type="number" id="bankBalanceInput" value="0"><button class="btn-success" id="updateBankBtn">Update</button></div><div class="bank-row"><label>Savings Goal/Payday:</label><input type="number" id="savingsGoalInput" value="50"><button class="btn-purple" id="updateSavingsGoalBtn">Set</button></div></div>
+  <div class="card"><div class="card-title">🏦 Bank & Savings</div><div class="bank-row"><label>Bank Balance:</label><input type="number" id="bankBalanceInput" value="0"><button class="btn-success" id="updateBankBtn">Update</button></div><div class="bank-row"><label>Savings Goal/Payday:</label><input type="number" id="savingsGoalInput" value="50"><button class="btn-primary" id="updateSavingsGoalBtn">Set</button></div></div>
 </div>
 
-<div class="tab-panel" id="tab-tracker"><div class="card"><div class="card-title">✅ Weekly Tracker <span class="badge badge-success" id="weeksPaidBadge">0 paid</span></div><div id="weeklyTracker" class="tracker-grid"></div><div style="font-size:0.68rem; text-align:center; margin-top:10px; padding-top: 8px; border-top: 1px solid var(--border);">Start: <strong id="startDatePreview">—</strong> | Auto payment: <strong id="autoPaymentPreview">$0</strong>/week to pay off term</div></div></div>
+<div class="tab-panel" id="tab-tracker"><div class="card"><div class="card-title">✅ Weekly Tracker <span class="badge badge-success" id="weeksPaidBadge">0 paid</span></div><button class="btn-primary" id="undoPaymentBtn" style="display: none; width: 100%; margin-bottom: 8px;">↶ Undo Last Payment</button><div id="weeklyTracker" class="tracker-grid"></div><div style="font-size:0.68rem; text-align:center; margin-top:10px; padding-top: 8px; border-top: 1px solid var(--border);">Start: <strong id="startDatePreview">—</strong> | Auto payment: <strong id="autoPaymentPreview">$0</strong>/week</div></div></div>
 
 <div class="tab-panel" id="tab-plan">
   <div class="plan-summary">
     <h3>🚀 Automated Payoff Plan</h3>
-    <p>Weekly payment is automatically calculated from your selected term</p>
     <div class="plan-grid">
       <div class="plan-stat"><strong id="planTotalDebt">$0</strong>Total Debt</div>
       <div class="plan-stat"><strong id="planRequiredWeekly">$0</strong>Auto Weekly Payment</div>
@@ -983,7 +782,7 @@ html { scroll-behavior: smooth; }
     <button class="btn-danger" id="resetDebtBtnSettings" style="width: 100%; margin-top: 8px;">Reset Debts</button>
     <button class="btn-danger" id="resetFullBtnSettings" style="width: 100%; margin-top: 8px;">Factory Reset</button>
   </div>
-  <div class="tip">🔐 Default passcode: <strong>1234</strong> | 📱 Data saved locally | 🔒 Your data never leaves your device</div>
+  <div class="tip">🔐 Default passcode: <strong>1234</strong> | 📱 Data saved locally</div>
 </div>
 
 <div id="passcodeModal" class="modal-overlay" style="display:none;">
@@ -998,50 +797,108 @@ html { scroll-behavior: smooth; }
 </div>
 
 <script>
-// Australian bank rates database with min payment rules
-// AU standard: Min payment = max(Interest charged + 1% of balance, $10)
-const bankDatabase = {
-  "CommBank": 18.2, "NAB": 16.5, "Westpac": 15.99, "ANZ": 17.8,
-  "Latitude": 21.5, "Afterpay": 0, "Zip Pay": 0, "HSBC": 14.9,
-  "Coles Credit": 19.99, "Kogan Card": 22.9, "Flexi Loan": 17.5,
-  "Other Credit Card": 18.0, "Personal Loan": 12.5
+// Australian banks and their products with interest rates
+const australianBanks = {
+  'CommBank': {
+    'Credit Card': 18.2,
+    'Personal Loan': 9.5,
+    'Car Loan': 7.2,
+    'Home Loan': 6.8,
+    'BNPL': 0
+  },
+  'NAB': {
+    'Credit Card': 16.5,
+    'Personal Loan': 9.8,
+    'Car Loan': 7.5,
+    'Home Loan': 6.9,
+    'BNPL': 0
+  },
+  'Westpac': {
+    'Credit Card': 15.99,
+    'Personal Loan': 10.2,
+    'Car Loan': 7.8,
+    'Home Loan': 7.0,
+    'BNPL': 0
+  },
+  'ANZ': {
+    'Credit Card': 17.8,
+    'Personal Loan': 9.9,
+    'Car Loan': 7.6,
+    'Home Loan': 6.85,
+    'BNPL': 0
+  },
+  'HSBC': {
+    'Credit Card': 14.9,
+    'Personal Loan': 8.9,
+    'Car Loan': 7.1,
+    'Home Loan': 6.7,
+    'BNPL': 0
+  },
+  'Coles Credit': {
+    'Credit Card': 19.99,
+    'BNPL': 0
+  },
+  'Kogan Card': {
+    'Credit Card': 22.9,
+    'BNPL': 0
+  },
+  'Afterpay': {
+    'BNPL': 0,
+    'Buy Now Pay Later': 0
+  },
+  'Zip Pay': {
+    'BNPL': 0,
+    'Buy Now Pay Later': 0
+  },
+  'Latitude': {
+    'BNPL': 21.5,
+    'Buy Now Pay Later': 21.5
+  },
+  'Flexi Loan': {
+    'Personal Loan': 17.5,
+    'Short Term Loan': 17.5
+  },
+  'Boost': {
+    'Personal Loan': 16.9
+  },
+  'Mozo': {
+    'Personal Loan': 15.5
+  },
+  'Others': {
+    'Custom Debt': 0
+  }
 };
-const bankList = Object.keys(bankDatabase);
-
-// AU Standard minimum payment calculation (returns MONTHLY amount)
-function calculateAUMinPayment(balance, interestRate) {
-  if (balance <= 0) return 0;
-  // AU regulation: Min payment = Interest charged + 1% of balance, minimum $10/month
-  // Calculate MONTHLY minimum payment
-  const monthlyRate = interestRate / 100 / 12;
-  const monthlyInterest = balance * monthlyRate;
-  const monthlyPrincipal = balance * 0.01; // 1% of balance
-  const monthlyMin = Math.max(monthlyInterest + monthlyPrincipal, 10);
-  
-  return Math.ceil(monthlyMin);
-}
 const money = n => '$' + (Math.round(n || 0)).toLocaleString();
 
+// Global state
 let RESET_PASSCODE = localStorage.getItem('appPasscode') || '1234';
 let currentBankBalance = parseFloat(localStorage.getItem('bankBalance') || '0');
 let totalSaved = parseFloat(localStorage.getItem('totalSaved') || '0');
 let savingsGoal = parseFloat(localStorage.getItem('savingsGoal') || '50');
 let planStartDate = new Date(localStorage.getItem('planStartDate') || '2026-05-27');
-let emergencyLog = JSON.parse(localStorage.getItem('emergencyLog') || '[]');
 let debtOriginal = parseFloat(localStorage.getItem('originalDebt') || '0');
 let isLight = localStorage.getItem('isLightMode') === 'true';
 let selectedTermYears = parseInt(localStorage.getItem('termYears') || '5');
+let paymentHistory = [];
 
 function saveAll() {
   localStorage.setItem('bankBalance', currentBankBalance);
   localStorage.setItem('totalSaved', totalSaved);
   localStorage.setItem('savingsGoal', savingsGoal);
   localStorage.setItem('planStartDate', planStartDate.toISOString().slice(0,10));
-  localStorage.setItem('emergencyLog', JSON.stringify(emergencyLog));
   localStorage.setItem('isLightMode', isLight);
   localStorage.setItem('appPasscode', RESET_PASSCODE);
   localStorage.setItem('originalDebt', debtOriginal);
   localStorage.setItem('termYears', selectedTermYears);
+}
+
+function calculateAUMinPayment(balance, interestRate) {
+  if (balance <= 0) return 0;
+  const monthlyRate = interestRate / 100 / 12;
+  const monthlyInterest = balance * monthlyRate;
+  const monthlyPrincipal = balance * 0.01;
+  const monthlyMin = Math.max(monthlyInterest + monthlyPrincipal, 10);
+  return Math.ceil(monthlyMin);
 }
 
 function getDebtRows() {
@@ -1053,20 +910,20 @@ function getDebtRows() {
   }));
 }
 
-function saveDebts() { localStorage.setItem('debtsData', JSON.stringify(getDebtRows())); }
+function saveDebts() {
+  localStorage.setItem('debtsData', JSON.stringify(getDebtRows()));
+}
 
 function getAutoWeeklyPayment() {
   const totalDebt = getDebtRows().reduce((s,r)=>s+r.balance, 0);
   if (totalDebt === 0) return 0;
-  const totalWeeks = selectedTermYears * 52;
-  return Math.ceil(totalDebt / totalWeeks);
+  return Math.ceil(totalDebt / (selectedTermYears * 52));
 }
 
 function updateDisplayValues() {
   const autoWeekly = getAutoWeeklyPayment();
-  const totalDebt = getDebtRows().reduce((s,r)=>s+r.balance, 0);
   document.getElementById('heroWeeklyPayment').textContent = money(autoWeekly);
-  document.getElementById('planRequiredWeekly').innerHTML = money(autoWeekly);
+  document.getElementById('planRequiredWeekly').textContent = money(autoWeekly);
   document.getElementById('autoPaymentPreview').textContent = money(autoWeekly);
   
   const sumMinMonthly = getDebtRows().reduce((s,r)=>s + r.minPayment, 0);
@@ -1083,21 +940,20 @@ function calculateTotalDebt() {
     totalMinPaymentsMonthly += parseFloat(tr.querySelector('.min-input')?.value) || 0;
   });
   
-  // Combine balance + monthly minimums
   const totalWithMinPayments = totalBalance + totalMinPaymentsMonthly;
-  
-  // Display COMBINED TOTAL in large bold orange, with breakdown below
   document.getElementById('heroTotalDebt').innerHTML = `${money(totalWithMinPayments)}<span style="font-size: 0.55rem; color: var(--text2); display: block; margin-top: 4px; font-family: 'DM Sans', sans-serif; font-weight: 400;">${money(totalBalance)} + ${money(totalMinPaymentsMonthly)}/mth</span>`;
   document.getElementById('debtCountBadge').textContent = getDebtRows().length;
   document.getElementById('planTotalDebt').textContent = money(totalBalance);
   updateProgress(totalBalance);
   checkDebtFree(totalBalance);
   updateDisplayValues();
-  return totalBalance;
 }
 
 function updateProgress(totalBalance) {
-  if (!debtOriginal || debtOriginal < totalBalance) { debtOriginal = totalBalance || 1; localStorage.setItem('originalDebt', debtOriginal); }
+  if (!debtOriginal || debtOriginal < totalBalance) {
+    debtOriginal = totalBalance || 1;
+    localStorage.setItem('originalDebt', debtOriginal);
+  }
   if (!debtOriginal || totalBalance === 0) return;
   const paid = Math.max(0, debtOriginal - totalBalance);
   const pct = Math.min(100, Math.round((paid / debtOriginal) * 100));
@@ -1111,8 +967,13 @@ function checkDebtFree(totalBalance) {
   else banner.classList.remove('visible');
 }
 
-function updateBankDisplay() { document.getElementById('heroBankDisplay').textContent = money(currentBankBalance); }
-function updateSavingsDisplay() { document.getElementById('totalSavingsDisplay').textContent = money(totalSaved); }
+function updateBankDisplay() {
+  document.getElementById('heroBankDisplay').textContent = money(currentBankBalance);
+}
+
+function updateSavingsDisplay() {
+  document.getElementById('totalSavingsDisplay').textContent = money(totalSaved);
+}
 
 function updateIncomeExpenseTotals() {
   const weeklySalary = parseFloat(document.getElementById('weeklySalary').value) || 0;
@@ -1124,7 +985,6 @@ function updateIncomeExpenseTotals() {
   document.getElementById('totalExpensesDisplay').textContent = Math.round(expenses).toLocaleString();
   document.getElementById('surplusDisplay').textContent = Math.round(surplus).toLocaleString();
   document.getElementById('heroSurplus').textContent = money(surplus);
-  return surplus;
 }
 
 function updateWeeksRemaining() {
@@ -1146,58 +1006,209 @@ function updateWeeksRemaining() {
 function renderDebtTable(rows) {
   const tbody = document.getElementById('debtTableBody');
   tbody.innerHTML = '';
-  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="6" style="padding:16px; text-align: center; color: var(--text2);">📋 Click + Add Debt to get started</td></tr>'; calculateTotalDebt(); saveDebts(); return; }
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="padding:16px; text-align: center; color: var(--text2);">📋 Click + Add Debt to get started</td></tr>';
+    calculateTotalDebt();
+    saveDebts();
+    return;
+  }
   rows.forEach(row => {
-    const tr = document.createElement('tr'); tr.setAttribute('data-row','1');
-    const tdBank = document.createElement('td'); const sel = document.createElement('select'); sel.className = 'bank-select';
-    bankList.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; if (b === row.bank) o.selected = true; sel.appendChild(o); }); tdBank.appendChild(sel);
-    const tdBal = document.createElement('td'); const balInp = document.createElement('input'); balInp.type = 'number'; balInp.value = row.balance; balInp.className = 'balance-input'; balInp.step = '10'; tdBal.appendChild(balInp);
-    const tdRate = document.createElement('td'); const rateInp = document.createElement('input'); rateInp.type = 'number'; rateInp.value = row.rate; rateInp.className = 'rate-input'; rateInp.step = '0.1'; tdRate.appendChild(rateInp);
-    const tdMin = document.createElement('td'); const minInp = document.createElement('input'); minInp.type = 'number'; minInp.value = row.minPayment; minInp.className = 'min-input'; minInp.step = '1'; minInp.readOnly = true; tdMin.appendChild(minInp);
-    const tdQ = document.createElement('td'); const qBtn = document.createElement('button'); qBtn.textContent = 'Pay $50'; qBtn.className = 'btn-sm'; tdQ.appendChild(qBtn);
-    const tdDel = document.createElement('td'); const delBtn = document.createElement('button'); delBtn.textContent = '✖'; delBtn.className = 'btn-sm btn-danger'; tdDel.appendChild(delBtn);
-    tr.append(tdBank, tdBal, tdRate, tdMin, tdQ, tdDel); tbody.appendChild(tr);
+    const tr = document.createElement('tr');
+    tr.setAttribute('data-row','1');
+    
+    // Bank column
+    const tdBank = document.createElement('td');
+    const bankSelect = document.createElement('select');
+    bankSelect.className = 'bank-select';
+    const bankNames = Object.keys(australianBanks);
+    bankNames.forEach(bankName => {
+      const o = document.createElement('option');
+      o.value = bankName;
+      o.textContent = bankName;
+      if (bankName === row.bank) o.selected = true;
+      bankSelect.appendChild(o);
+    });
+    tdBank.appendChild(bankSelect);
+    
+    // Product column (filtered by bank)
+    const tdProduct = document.createElement('td');
+    const productSelect = document.createElement('select');
+    productSelect.className = 'bank-select';
+    const updateProductOptions = () => {
+      productSelect.innerHTML = '';
+      const selectedBank = bankSelect.value;
+      const products = australianBanks[selectedBank] || {};
+      Object.keys(products).forEach(productType => {
+        const o = document.createElement('option');
+        o.value = productType;
+        o.textContent = productType;
+        if (productType === row.product) o.selected = true;
+        productSelect.appendChild(o);
+      });
+    };
+    updateProductOptions();
+    tdProduct.appendChild(productSelect);
+    
+    // Balance column
+    const tdBal = document.createElement('td');
+    const balInp = document.createElement('input');
+    balInp.type = 'number';
+    balInp.value = row.balance;
+    balInp.className = 'balance-input';
+    balInp.step = '10';
+    tdBal.appendChild(balInp);
+    
+    // Interest rate column (editable for Others, read-only for others)
+    const tdRate = document.createElement('td');
+    const rateInp = document.createElement('input');
+    rateInp.type = 'text';
+    rateInp.value = row.rate || '';
+    rateInp.placeholder = 'Enter %';
+    rateInp.className = 'rate-input';
+    rateInp.style.cursor = row.bank === 'Others' ? 'text' : 'not-allowed';
+    rateInp.style.opacity = row.bank === 'Others' ? '1' : '0.7';
+    rateInp.readOnly = row.bank !== 'Others';
+    tdRate.appendChild(rateInp);
+    
+    // Min payment column
+    const tdMin = document.createElement('td');
+    const minInp = document.createElement('input');
+    minInp.type = 'number';
+    minInp.value = row.minPayment;
+    minInp.className = 'min-input';
+    minInp.step = '1';
+    minInp.readOnly = true;
+    tdMin.appendChild(minInp);
+    
+    // Quick pay button
+    const tdQ = document.createElement('td');
+    const qBtn = document.createElement('button');
+    qBtn.textContent = 'Pay $50';
+    qBtn.className = 'btn-sm';
+    tdQ.appendChild(qBtn);
+    
+    // Delete button
+    const tdDel = document.createElement('td');
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '✖';
+    delBtn.className = 'btn-sm btn-danger';
+    tdDel.appendChild(delBtn);
+    
+    tr.append(tdBank, tdProduct, tdBal, tdRate, tdMin, tdQ, tdDel);
+    tbody.appendChild(tr);
+    
     const refresh = () => {
-      const balance = parseFloat(balInp.value) || 0;
-      const rate = bankDatabase[sel.value] || 18.0;
-      rateInp.value = rate;
+      const selectedBank = bankSelect.value;
+      const selectedProduct = productSelect.value;
       
-      // Calculate AU standard minimum payment (MONTHLY)
-      const auMinPaymentMonthly = calculateAUMinPayment(balance, rate);
-      minInp.value = auMinPaymentMonthly;
+      // Get interest rate
+      let rate;
+      if (selectedBank === 'Others') {
+        // For Others, use manually entered rate
+        rate = parseFloat(rateInp.value) || 0;
+        rateInp.readOnly = false;
+        rateInp.style.opacity = '1';
+      } else {
+        // For banks, auto-calculate from database
+        rate = (australianBanks[selectedBank] && australianBanks[selectedBank][selectedProduct]) || 0;
+        rateInp.value = rate;
+        rateInp.readOnly = true;
+        rateInp.style.opacity = '0.7';
+      }
+      
+      // Calculate AU standard minimum payment
+      const balance = parseFloat(balInp.value) || 0;
+      const auMinPayment = calculateAUMinPayment(balance, rate);
+      minInp.value = auMinPayment;
       
       calculateTotalDebt();
       saveDebts();
       buildDestroyPlan();
       updateDisplayValues();
     };
-    sel.onchange = refresh;
+    
+    bankSelect.onchange = () => {
+      updateProductOptions();
+      const isOthers = bankSelect.value === 'Others';
+      rateInp.readOnly = !isOthers;
+      rateInp.style.opacity = isOthers ? '1' : '0.7';
+      if (!isOthers) {
+        rateInp.value = '';
+      }
+      refresh();
+    };
+    
+    productSelect.onchange = refresh;
     balInp.oninput = refresh;
-    qBtn.onclick = () => { let nb = Math.max(0, (parseFloat(balInp.value)||0) - 50); balInp.value = nb; refresh(); alert(`✅ Paid $50 to ${sel.value}`); };
-    delBtn.onclick = () => { if (tbody.children.length > 1) { tr.remove(); calculateTotalDebt(); } else renderDebtTable([]); };
+    rateInp.oninput = () => {
+      if (bankSelect.value === 'Others') {
+        refresh();
+      }
+    };
+    
+    qBtn.onclick = () => {
+      let nb = Math.max(0, (parseFloat(balInp.value)||0) - 50);
+      balInp.value = nb;
+      refresh();
+      const bankName = bankSelect.value === 'Others' ? `Custom Debt (${rateInp.value}%)` : bankSelect.value;
+      alert(`✅ Paid $50 to ${bankName}`);
+    };
+    
+    delBtn.onclick = () => {
+      if (tbody.children.length > 1) {
+        tr.remove();
+        calculateTotalDebt();
+      } else {
+        renderDebtTable([]);
+      }
+    };
+    
     refresh();
   });
-  calculateTotalDebt(); saveDebts();
+  calculateTotalDebt();
+  saveDebts();
 }
 
-function addNewDebtRow() { const rows = getDebtRows(); rows.push({ bank:'Other Credit Card', balance:0, rate:18.0, minPayment:0 }); renderDebtTable(rows); }
-function loadDebts() { const saved = localStorage.getItem('debtsData'); renderDebtTable(saved ? JSON.parse(saved) : []); }
-function resetDebtsToZero() { const rows = getDebtRows().map(r => ({ ...r, balance:0, minPayment:0 })); renderDebtTable(rows); alert('✅ All debts reset to $0.'); }
+function addNewDebtRow() {
+  const rows = getDebtRows();
+  rows.push({ bank: 'CommBank', product: 'Credit Card', balance:0, rate:18.2, minPayment:0 });
+  renderDebtTable(rows);
+}
+
+function loadDebts() {
+  const saved = localStorage.getItem('debtsData');
+  renderDebtTable(saved ? JSON.parse(saved) : []);
+}
+
+function resetDebtsToZero() {
+  const rows = getDebtRows().map(r => ({ ...r, balance:0, minPayment:0 }));
+  renderDebtTable(rows);
+  alert('✅ All debts reset to $0.');
+}
 
 function applyDebtPayment(amount) {
   let rows = getDebtRows().filter(r=>r.balance>0).sort((a,b)=>b.rate-a.rate);
   let remaining = amount;
-  rows.forEach(r => { if(remaining<=0) return; let pay = Math.min(r.balance, remaining); r.balance -= pay; remaining -= pay; });
+  rows.forEach(r => {
+    if(remaining<=0) return;
+    let pay = Math.min(r.balance, remaining);
+    r.balance -= pay;
+    remaining -= pay;
+  });
   renderDebtTable(rows);
 }
 
 function buildDestroyPlan() {
   const rows = getDebtRows().filter(r => r.balance > 0).sort((a,b)=>b.rate-a.rate);
   const container = document.getElementById('planStepsContainer');
-  if (!rows.length) { container.innerHTML = '<div class="tip">📋 Add debts to see your personalized payoff plan.</div>'; document.getElementById('strategyComparison').innerHTML = 'No debts added yet.'; return; }
-  container.innerHTML = rows.map((r,i)=>`<div class="plan-step"><div class="step-num">${i+1}</div><div class="step-body"><h4>${r.bank}</h4><p>Balance: <span class="highlight">${money(r.balance)}</span> | Rate: <span class="warn">${r.rate}%</span> | Min weekly: <span class="good">${money(r.minPayment)}</span></p></div></div>`).join('');
+  if (!rows.length) {
+    container.innerHTML = '<div class="tip">📋 Add debts to see your personalized payoff plan.</div>';
+    document.getElementById('strategyComparison').innerHTML = 'No debts added yet.';
+    return;
+  }
+  container.innerHTML = rows.map((r,i)=>`<div class="plan-step"><div class="step-num">${i+1}</div><div class="step-body"><h4>${r.bank}</h4><p>Balance: <span class="highlight">${money(r.balance)}</span> | Rate: <span class="warn">${r.rate}%</span> | Min monthly: <span class="good">${money(r.minPayment)}</span></p></div></div>`).join('');
   const highest = rows[0];
-  document.getElementById('strategyComparison').innerHTML = `🔥 Pay highest interest first: <strong>${highest.bank}</strong> (${highest.rate}%). Auto payment = ${money(getAutoWeeklyPayment())}/week. Focus on eliminating high-interest debts first.`;
+  document.getElementById('strategyComparison').innerHTML = `🔥 Pay highest interest first: <strong>${highest.bank}</strong> (${highest.rate}%). Focus on eliminating high-interest debts first.`;
 }
 
 function updateWeeksTracker() {
@@ -1205,26 +1216,93 @@ function updateWeeksTracker() {
   const start = new Date(planStartDate);
   tracker.innerHTML = '';
   const autoPay = getAutoWeeklyPayment();
+  
   for (let i=0; i<156; i++) {
-    let d = new Date(start); d.setDate(d.getDate() + i*7);
-    let chip = document.createElement('div'); chip.className = 'week-chip';
-    chip.innerHTML = `<div class="wk">W${i+1}</div><div class="amt">${money(autoPay)}</div>`;
+    let d = new Date(start);
+    d.setDate(d.getDate() + i*7);
+    let chip = document.createElement('div');
+    chip.className = 'week-chip';
+    
+    const debtRows = getDebtRows().filter(r => r.balance > 0).sort((a,b) => b.rate - a.rate);
+    const targetCard = debtRows.length > 0 ? debtRows[0].bank : 'N/A';
+    const shortName = targetCard.split(' ')[0];
+    
+    chip.innerHTML = `<div class="wk">${shortName}</div><div class="amt">${money(autoPay)}</div>`;
+    chip.setAttribute('data-week', i);
+    chip.setAttribute('data-card', targetCard);
+    
     chip.onclick = () => {
       let payment = getAutoWeeklyPayment();
       if(currentBankBalance >= payment && payment > 0){
+        const debtBefore = JSON.stringify(getDebtRows());
+        paymentHistory.push({
+          week: i,
+          payment: payment,
+          bankBalanceBefore: currentBankBalance,
+          debtsStateBefore: debtBefore,
+          chip: chip
+        });
+        
         currentBankBalance -= payment;
         applyDebtPayment(payment);
         totalSaved += payment;
-        updateBankDisplay(); updateSavingsDisplay(); saveAll();
-        chip.style.opacity = '0.5'; chip.style.pointerEvents = 'none';
+        updateBankDisplay();
+        updateSavingsDisplay();
+        saveAll();
+        chip.style.opacity = '0.5';
+        chip.style.pointerEvents = 'none';
         chip.classList.add('paid');
-        alert(`✅ Paid ${money(payment)} toward highest interest debt!`);
-      } else alert(payment <= 0 ? "📋 No active debt." : "💳 Insufficient bank balance.");
+        updateUndoButton();
+        alert(`✅ Paid ${money(payment)} toward ${targetCard}!`);
+      } else {
+        alert(payment <= 0 ? "📋 No active debt." : "💳 Insufficient bank balance.");
+      }
     };
     tracker.appendChild(chip);
   }
   document.getElementById('startDatePreview').textContent = start.toLocaleDateString('en-AU');
   document.getElementById('autoPaymentPreview').textContent = money(autoPay);
+  updateUndoButton();
+}
+
+function updateUndoButton() {
+  const undoBtn = document.getElementById('undoPaymentBtn');
+  if (undoBtn) {
+    undoBtn.style.display = paymentHistory.length > 0 ? 'block' : 'none';
+    if (paymentHistory.length > 0) {
+      const lastPayment = paymentHistory[paymentHistory.length - 1];
+      undoBtn.textContent = `↶ Undo (${money(lastPayment.payment)})`;
+    }
+  }
+}
+
+function undoLastPayment() {
+  if (paymentHistory.length === 0) {
+    alert('❌ No payments to undo');
+    return;
+  }
+  
+  const lastPayment = paymentHistory.pop();
+  currentBankBalance = lastPayment.bankBalanceBefore;
+  const debts = JSON.parse(lastPayment.debtsStateBefore);
+  renderDebtTable(debts);
+  
+  const allChips = document.querySelectorAll('.week-chip.paid');
+  allChips.forEach(chip => {
+    if (chip.getAttribute('data-week') == lastPayment.week) {
+      chip.style.opacity = '1';
+      chip.style.pointerEvents = 'auto';
+      chip.classList.remove('paid');
+    }
+  });
+  
+  totalSaved = Math.max(0, totalSaved - lastPayment.payment);
+  updateBankDisplay();
+  updateSavingsDisplay();
+  calculateTotalDebt();
+  saveAll();
+  updateUndoButton();
+  alert(`↶ Payment of ${money(lastPayment.payment)} undone!`);
 }
 
 function showPasscodePrompt(callback) {
@@ -1248,48 +1326,59 @@ function showPasscodePrompt(callback) {
   inp.onkeypress = e => { if(e.key === 'Enter') confirm(); };
 }
 
-document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(btn.dataset.tab).classList.add('active');
-  if(btn.dataset.tab === 'tab-plan') buildDestroyPlan();
-}));
-
 function init() {
+  // Setup theme
   document.body.classList.toggle('light', isLight);
   document.getElementById('darkToggleBtn').textContent = isLight ? '🌙 Dark' : '☀️ Light';
+  
+  // Setup dates and selectors
   document.getElementById('planStartDate').value = planStartDate.toISOString().slice(0,10);
   document.getElementById('termSelector').value = selectedTermYears;
   document.getElementById('bankBalanceInput').value = currentBankBalance;
   document.getElementById('savingsGoalInput').value = savingsGoal;
-
-  ['weeklySalary','additionalIncome','rent','carLoan','loanPayment','coffee','zip','other','extra1','extra2'].forEach(id=>
-    document.getElementById(id)?.addEventListener('input',()=>{ updateIncomeExpenseTotals(); saveAll(); })
-  );
-
+  
+  // Tab buttons
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const tabId = btn.getAttribute('data-tab');
+      document.getElementById(tabId).classList.add('active');
+      if(tabId === 'tab-plan') buildDestroyPlan();
+    });
+  });
+  
+  // Income input listeners
+  ['weeklySalary','additionalIncome','rent','carLoan','loanPayment','coffee','zip','other','extra1','extra2'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', () => { updateIncomeExpenseTotals(); saveAll(); });
+  });
+  
+  // Button handlers
   document.getElementById('updateBankBtn').onclick = () => {
     currentBankBalance = parseFloat(document.getElementById('bankBalanceInput').value) || 0;
     updateBankDisplay();
     saveAll();
   };
-
+  
   document.getElementById('updateSavingsGoalBtn').onclick = () => {
     savingsGoal = parseFloat(document.getElementById('savingsGoalInput').value) || 0;
     updateSavingsDisplay();
     saveAll();
   };
-
+  
   document.getElementById('updateTermBtn').onclick = () => {
     planStartDate = new Date(document.getElementById('planStartDate').value);
     selectedTermYears = parseInt(document.getElementById('termSelector').value);
     updateWeeksTracker();
     updateDisplayValues();
     saveAll();
-    alert(`✅ Term set to ${selectedTermYears} years. Auto weekly payment: ${money(getAutoWeeklyPayment())}`);
+    alert(`✅ Term set to ${selectedTermYears} years.`);
   };
-
+  
   document.getElementById('addDebtRowBtn').onclick = addNewDebtRow;
+  document.getElementById('undoPaymentBtn').onclick = undoLastPayment;
   document.getElementById('resetDebtBtn').onclick = () => showPasscodePrompt(ok => ok && resetDebtsToZero());
   document.getElementById('resetDebtBtnSettings').onclick = () => showPasscodePrompt(ok => ok && resetDebtsToZero());
   document.getElementById('resetFullBtn').onclick = () => showPasscodePrompt(ok => { if(ok){ localStorage.clear(); location.reload(); } });
@@ -1298,7 +1387,8 @@ function init() {
   document.getElementById('manualSalaryBtn').onclick = () => { currentBankBalance += savingsGoal; totalSaved += savingsGoal; updateBankDisplay(); updateSavingsDisplay(); saveAll(); alert(`💰 Payday! +${money(savingsGoal)}`); };
   document.getElementById('darkToggleBtn').onclick = () => { isLight = !isLight; document.body.classList.toggle('light', isLight); document.getElementById('darkToggleBtn').textContent = isLight ? '🌙 Dark' : '☀️ Light'; saveAll(); };
   document.getElementById('changePasscodeBtn').onclick = () => { let newCode = document.getElementById('newPasscodeInput').value; if(newCode.length===4 && /^\d+$/.test(newCode)){ RESET_PASSCODE = newCode; document.getElementById('newPasscodeInput').value = ''; saveAll(); alert('✅ Passcode updated.'); } else alert('❌ Enter 4 digits.'); };
-
+  
+  // Load data
   loadDebts();
   updateBankDisplay();
   updateSavingsDisplay();
@@ -1308,6 +1398,7 @@ function init() {
   saveAll();
 }
 
+// Start the app
 init();
 </script>
 </div>
